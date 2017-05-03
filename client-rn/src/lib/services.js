@@ -1,5 +1,4 @@
 import { MediaStreamTrack, getUserMedia } from 'react-native-webrtc';
-import MediaStreamRecorder from './MediaStreamRecorder';
 const mediaConstraints = {
   audio: true,
   video: true
@@ -23,8 +22,6 @@ function getLocalStream(isFront, callback) {
 
 function onMediaSuccess(stream) {
   streamCb(stream);
-  let mediaRecorder = new MediaStreamRecorder(stream, options);
-  mediaRecorder.record();
 }
 
 function onMediaError(e) {
