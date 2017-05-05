@@ -1,5 +1,6 @@
-const Koa = require("koa")
+// @ts-check
 
+const Koa = require("koa")
 const ss = require("socket.io-stream")
 const app = new Koa()
 const fs = require("fs")
@@ -7,33 +8,19 @@ const path = require("path")
 const uploadReg = /^\/uploads\//
 const http = require("http")
 const uuid = require("node-uuid")
+const route = require("./routes")
+const socket = require("./socket")
 
-app.use((context, next) => {
-    if (uploadReg.test(context.url)) {
-        context.set("Content-Type", 'video/webm')
-        fs.createReadStream(path.resolve(__dirname, `.${context.url}`))
-            .pipe(context.body)
-    }
-})
+app.use(route.routes())
+app.use(route.allowedMethods())
 
 let callback = app.callback()
 const server = http.createServer(callback)
 const {PORT = 4412} = process.env
-const io = require("socket.io")(server)
+socket.initIO(server)
 server.listen(PORT)
 
+console.log(`app start at ${PORT}`)
 
-
-io.on("connection", (socket) => {
-    socket.medias = []
-    ss(socket).on("media", (stream) => {
-        let id = uuid.v4()
-        stream.pipe(fs.createWriteStream(path.resolve(__dirname, `./uploads/${id}.webm`)))
-        socket.medias.push({
-            media: `/uploads/${id}.webm`,
-            time: new Date()
-        })
-    })
-})
 
 
