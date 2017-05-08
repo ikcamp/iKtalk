@@ -6,6 +6,7 @@ const app = new Koa()
 const fs = require("fs")
 const path = require("path")
 const http = require("http")
+const https = require("https")
 const uuid = require("node-uuid")
 // const bodyParser = require("koa-bodyparser")
 const koaStatic = require("koa-static")
@@ -24,13 +25,20 @@ app.use(route.allowedMethods())
 
 let callback = app.callback()
 const server = http.createServer(callback)
-const { PORT = 4412 } = process.env
+const { PORT = 4412, HTTPS_PORT = 4413 } = process.env
 
-socket.initIO(server)
+let httpsServer = https.createServer({
+    key: fs.readFileSync(path.resolve(__dirname, './cert/private.key')),
+    cert:fs.readFileSync(path.resolve(__dirname, './cert/pub.crt'))
+}, callback)
+
+socket.initIO(server, httpsServer)
 socket.create('test')
 
 // socket.initIO(server)
 server.listen(PORT)
+console.log(`http start at ${PORT}`)
 
-console.log(`app start at ${PORT}`)
+httpsServer.listen(HTTPS_PORT)
+console.log(`https start at ${HTTPS_PORT}`)
 

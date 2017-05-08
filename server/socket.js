@@ -43,7 +43,7 @@ class Socket {
                     }).save(filePath).on('end', () => {
                         debug('saved')
                         ffmpeg.ffprobe(filePath, (err, data) => {
-                            if(err){
+                            if (err) {
 
                             }
                             this.duration += data.format.duration
@@ -57,15 +57,15 @@ class Socket {
     addVideo(video, duration) {
         if (this.videos.length >= MAX_VIDEO_FILES) {
             let file = path.resolve(__dirname, `.${this.videos[0].video}`)
-            fs.unlink(file, (err, data)=>{
-                if(err){
+            fs.unlink(file, (err, data) => {
+                if (err) {
                     debug(err)
-                }else{
+                } else {
                     debug(`remove file ${file}`)
                 }
             })
             this.videos.splice(0, 1)
-            
+
         }
         this.videos.push({
             sequence: this.sequence,
@@ -113,9 +113,12 @@ class Socket {
     }
 }
 
-const initIO = (server) => {
+const initIO = (server, httpsServer) => {
     server = server
     instance = io(server)
+    if (httpsServer) {
+        instance.attach(httpsServer)
+    }
 }
 
 const getSocket = (id) => {
