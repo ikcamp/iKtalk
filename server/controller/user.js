@@ -2,12 +2,21 @@
 const Router = require("koa-router")
 const user = require("../model/user")
 const Base = require("./base")
+
+/**
+ * 用户管理
+ */
 class User extends Base {
     constructor() {
         super()
         this.add()
         this.getById()
     }
+    /**
+     * 添加用户
+     * + method POST
+     * + URL /user
+     */
     add() {
         this.routes.post('/', (context, next) => {
             let item = context.request.form
@@ -18,6 +27,12 @@ class User extends Base {
             })
         })
     }
+
+    /**
+     * 获取用户信息
+     * + method GET
+     * + URL /user/:id
+     */
     getById() {
         this.routes.get('/:id', (context, next) => {
             let id = context.params.id
