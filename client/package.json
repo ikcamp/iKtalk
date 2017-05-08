@@ -5,7 +5,9 @@
   "dependencies": {
     "msr": "^1.3.4",
     "react": "^15.5.4",
-    "react-dom": "^15.5.4"
+    "react-dom": "^15.5.4",
+    "socket.io": "^1.7.4",
+    "socket.io-stream": "^0.9.1"
   },
   "devDependencies": {
     "react-scripts": "0.9.5"

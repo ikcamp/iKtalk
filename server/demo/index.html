@@ -46,9 +46,9 @@
             mediaRecorder.mimeType = 'video/webm';
 
             mediaRecorder.ondataavailable = function (blob) {
-                let stream = ss.createStream()
-                ss(socket).emit("upload", stream)
-                ss.createBlobReadStream(blob).pipe(stream)
+                // let stream = ss.createStream()
+                // ss(socket).emit("upload", stream)
+                // ss.createBlobReadStream(blob).pipe(stream)
             };
             mediaRecorder.start(5000);
         }
