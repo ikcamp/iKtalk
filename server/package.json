@@ -10,8 +10,11 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "fluent-ffmpeg": "^2.1.2",
     "koa": "^2.2.0",
+    "koa-bodyparser": "^4.2.0",
     "koa-router": "^7.1.1",
+    "koa-static": "^3.0.0",
     "m3u": "0.0.2",
     "node-uuid": "^1.4.8",
     "socket.io": "^1.7.3",

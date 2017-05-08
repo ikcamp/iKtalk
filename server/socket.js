@@ -7,84 +7,99 @@ const uuid = require("node-uuid")
 const m3u8 = require("m3u")
 // const redis = require('socket.io-redis');
 const debug = require("debug")('socket')
+const ffmpeg = require("fluent-ffmpeg")
+
 
 let server
 let instance
 
 const sockets = {}
-const MAX_VIDEO_FILES = 10
+const MAX_VIDEO_FILES = 2
 
 class Socket {
     constructor(id) {
         this.id = id
-        let inst = getInstance()
-        this.io = inst.of(id)
+        console.log(id)
+        this.ns = instance.of(`/${id}`)
         this.init()
         this.videos = []
         sockets[id] = this
         this.sequence = 0
+        this.duration = 0
     }
     init() {
-        this.io.on("connection", (socket) => {
-            socket.on("connect", (data) => {
+        this.ns.on("connection", (socket) => {
+            socket.on("login", (data) => {
+                console.log(data)
                 socket.user = data
             })
             ioStream(socket).on("upload", (stream) => {
-                let id = uuid.v4()
-                stream.pipe(fs.createWriteStream(path.resolve(__dirname, `./uploads/${id}.ts`)))
-                this.addVideo(`/uploads/${id}.ts`)
-                this.io.emit("onSourceChange")
+                let filename = `${this.id}-${this.sequence}.ts`
+                let filePath = path.resolve(__dirname, `./uploads/${filename}`)
+                let tmpPath = `${filePath}_tmp`
+                ffmpeg(stream).videoCodec('libx264').audioCodec('aac').addOption('-mpegts_copyts', 1).addOption('-strict', -2).format('mpegts').addOutputOption('-output_ts_offset', this.duration)
+                    .on('error', (err) => {
+                        debug('an error happened: ' + err.message);
+                    }).save(filePath).on('end', () => {
+                        debug('saved')
+                        ffmpeg.ffprobe(filePath, (err, data) => {
+                            if(err){
+
+                            }
+                            this.duration += data.format.duration
+                            this.addVideo(`/uploads/${filename}`, data.format.duration)
+                        })
+                    })
+                this.sequence++
             })
         })
     }
-    addVideo(video) {
+    addVideo(video, duration) {
         if (this.videos.length >= MAX_VIDEO_FILES) {
+            let file = path.resolve(__dirname, `.${this.videos[0].video}`)
+            fs.unlink(file, (err, data)=>{
+                if(err){
+                    debug(err)
+                }else{
+                    debug(`remove file ${file}`)
+                }
+            })
             this.videos.splice(0, 1)
+            
         }
         this.videos.push({
             sequence: this.sequence,
-            video
+            video,
+            duration
         })
-        this.sequence++
     }
+
+    getVideoInfo(video) {
+        if (video.duration) {
+            return Promise.resolve(video.duration)
+        } else {
+            return new Promise((resolve, reject) => {
+                ffmpeg.ffprobe(video.video, (err, data) => {
+                    console.log(data)
+                })
+            })
+        }
+    }
+
     getM3U() {
         let writer = m3u8.httpLiveStreamingWriter();
-        // EXT-X-TARGETDURATION: Maximum media file duration.
-        writer.targetDuration(10);
+        writer.version(3);
+        writer.targetDuration(6);
+        writer.allowCache(false);
 
-        // EXT-X-MEDIA-SEQUENCE: Sequence number of first file (optional).
-        // (optional)
+        if (this.videos.length) {
+            writer.mediaSequence(this.videos[0].sequence)
+        }
+        writer.write();
         this.videos.forEach((item) => {
-            writer.mediaSequence(item.sequence)
-            writer.write(item.video)
+            writer.file(`${item.video}`, item.duration, `${this.id}-${item.sequence}`)
         })
 
-
-        // EXT-X-PROGRAM-DATE-TIME: The date of the program's origin, optional.
-        // (optional)
-        writer.programDateTime(new Date().toUTCString());
-
-        // EXT-X-ALLOW-CACHE: Set if the client is allowed to cache this m3u file.
-        // (optional)
-        writer.allowCache(true);
-        // writer.allowCache(false);
-
-        // // EXT-X-PLAYLIST-TYPE: Provides mutability information about the m3u file.
-        // // (optional)
-        // writer.playlistType('EVENT');
-        // writer.playlistType('VOD');
-
-        // EXT-X-ENDLIST: Indicates that no more media files will be added to the m3u file.
-        // (optional)
-        writer.endlist();
-
-        // // EXT-X-VERSION: Indicates the compatibility version of the Playlist file.
-        // // (optional)
-        // writer.version(3);
-
-
-        // EXT-X-DISCONTINUITY: Indicates that the player should expect the next video segment to be a different resolution or have a different audio profile than the last.
-        writer.discontinuity();
         let str = writer.toString()
         debug(`playlist: ${str}`);
         return str
@@ -98,21 +113,9 @@ class Socket {
     }
 }
 
-
-
 const initIO = (server) => {
     server = server
-}
-
-const getInstance = () => {
-    // if(!instance){
     instance = io(server)
-    // instance.adapter(redis({
-    //     host: 'localhost',
-    //     port: 6379
-    // }))
-    // }
-    return instance
 }
 
 const getSocket = (id) => {
@@ -126,5 +129,3 @@ module.exports = {
         new Socket(id)
     }
 }
-
-new Socket('test')
