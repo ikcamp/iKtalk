@@ -36,6 +36,7 @@ class Channel extends Base {
      * 添加直播频道
      * + method POST
      * + URL /channel/
+     * 需要传入owner，这样可以通过owner来确定是否是直播发起者
      */
     add() {
         this.routes.post("/", (context, next) => {
