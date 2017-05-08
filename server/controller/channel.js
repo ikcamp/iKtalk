@@ -47,10 +47,10 @@ class Channel extends Base {
         })
     }
 
-
-
     /**
-     * 
+     * 获取某一频道信息
+     * + method GET
+     * + URL /channel/:id
      */
     get() {
         this.routes.get("/:id", (context, next) => {
@@ -69,8 +69,13 @@ class Channel extends Base {
         })
     }
 
+    /**
+     * 开始直播
+     * + method GET
+     * + URL /channel/:id/begin
+     */
     begin() {
-        this.routes.post('/:id/begin', (context, next) => {
+        this.routes.get('/:id/begin', (context, next) => {
             let id = context.params.id
             socket.create(id)
             this.renderJSON(context, {
@@ -79,6 +84,11 @@ class Channel extends Base {
         })
     }
 
+    /**
+     * 停止直播
+     * + method DELETE
+     * + URL /channel/:id
+     */
     end() {
         this.routes.del('/:id', (context, next) => {
             C.done()
@@ -88,6 +98,9 @@ class Channel extends Base {
         })
     }
 
+    /**
+     * 直播播放地址，此地址内部解析
+     */
     playList() {
         this.routes.get('/:id/playlist', (context, next) => {
             let id = context.params.id
