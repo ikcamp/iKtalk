@@ -9,6 +9,7 @@ import Home from './Home'
 import Config from './Config'
 import Room from './Room'
 import MyRoom from './MyRoom'
+import fetch from '../fetch'
 import '../style/App.css'
 
 class App extends Component {
@@ -39,15 +40,8 @@ class App extends Component {
 
   addUser() {
     fetch('http://localhost:4412/user', {
-      method: 'POST',
-      body: 'id=zoei',
-      mode: 'cors',
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'multipart/form-data; charset=utf-8',
-      }
+      body: { id: 'testuser' }
     }).then(res=>res.json()).then(({ data })=>{
-      console.log('data', data)
       this.setState({ user: data })
       store.dispatch({
         type: 'UPDATE_USER',
@@ -63,7 +57,6 @@ class App extends Component {
       mode: 'cors'
     }).then(res=>res.json())
       .then(({ data })=>{
-        console.log('getUser', data)
         this.setState({ user: data })
         store.dispatch({
           type: 'UPDATE_USER',

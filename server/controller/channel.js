@@ -36,7 +36,7 @@ class Channel extends Base {
      */
     add() {
         this.routes.post("/", (context, next) => {
-            let item = JSON.parse(context.request.body)
+            let item = context.request.body
             channel.add(item)
             this.renderJSON(context, {
                 status: 0

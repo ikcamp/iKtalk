@@ -18,7 +18,7 @@ class User extends Base {
      */
     add() {
         this.routes.post('/', (context, next) => {
-            let item = context.request.form
+            let item = context.request.body
             let u = user.add(item)
             this.renderJSON(context, {
                 status: 0,
