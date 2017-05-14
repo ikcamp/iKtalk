@@ -1,0 +1,51 @@
+Arguments: 
+  /usr/local/bin/node /Users/zoei/.yarn/bin/yarn.js install
+
+PATH: 
+  /Users/zoei/.yarn/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin
+
+Yarn version: 
+  0.19.1
+
+Node version: 
+  7.7.2
+
+Platform: 
+  darwin x64
+
+npm manifest: 
+  {
+    "name": "iktalk-server",
+    "version": "1.0.0",
+    "description": "",
+    "main": "index.js",
+    "scripts": {
+      "test": "echo \"Error: no test specified\" && exit 1",
+      "dev": "nodemon app.js"
+    },
+    "author": "",
+    "license": "ISC",
+    "dependencies": {
+      "fluent-ffmpeg": "^2.1.2",
+      "koa": "^2.2.0",
+      "koa-bodyparser": "^4.2.0",
+      "koa-router": "^7.1.1",
+      "koa-static": "^3.0.0",
+      "m3u": "0.0.2",
+      "node-uuid": "^1.4.8",
+      "socket.io": "^1.7.3",
+      "socket.io-redis": "^4.0.0",
+      "socket.io-stream": "^0.9.1"
+    }
+  }
+
+yarn manifest: 
+  No manifest
+
+Lockfile: 
+  No lockfile
+
+Trace: 
+  Error: read ETIMEDOUT
+      at exports._errnoException (util.js:1033:11)
+      at TLSWrap.onread (net.js:584:26)

@@ -2,7 +2,7 @@
 const users = []
 const uuid = require("node-uuid")
 module.exports = {
-    add(user) {
+    add(user = {}) {
         user.id = user.id || uuid.v4()
         users.push(user)
         return user

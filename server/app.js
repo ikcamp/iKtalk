@@ -18,6 +18,10 @@ const socket = require("./socket")
 app.use(koaStatic(path.resolve(__dirname, "./demo/"), {
     index: 'index.html'
 }))
+app.use(async (context, next) => {
+    context.set('Access-Control-Allow-Origin', "*")
+    return await next()
+})
 // app.use(bodyParser())
 app.use(route.routes())
 app.use(route.allowedMethods())
