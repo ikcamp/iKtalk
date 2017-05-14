@@ -21,8 +21,8 @@ class Config extends Component {
       .then(({ status, message, data })=>{
         console.log('channel info', data)
         if (status !== 0) {
-          this.setState({
-            liveStatus: 0
+          fetch('http://localhost:4412/channel', {
+            body: { id: user.id }
           })
         } else {
           this.setState({
@@ -35,10 +35,12 @@ class Config extends Component {
   }
 
   begin() {
-    const { user } = this.props
-    fetch('http://localhost:4412/channel', {
-      body: {
-        id: user.id
+    const { user, history } = this.props
+    fetch(`http://localhost:4412/channel/${user.id}/begin`)
+    .then(res=>res.json())
+    .then(({ status }) => {
+      if (status === 0) {
+        history.push(`/room/${user.id}`)
       }
     })
   }

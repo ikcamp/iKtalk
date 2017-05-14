@@ -1,4 +1,4 @@
-export default function(url, { method, body, headers, ...others }) {
+export default function(url, { method, body, headers, ...others } = {}) {
   return fetch(url, {
     method: method || body ? 'POST' : 'GET',
     body: JSON.stringify(body),

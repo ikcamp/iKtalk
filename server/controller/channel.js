@@ -10,6 +10,7 @@ class Channel extends Base {
         super()
         this.list()
         this.add()
+        this.begin()
         this.playList()
         this.get()
     }
