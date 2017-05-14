@@ -1,11 +1,7 @@
 // @ts-check
-
-const Router = require("koa-router")
-const uuid = require("node-uuid")
-// const channels = []
 const socket = require("../socket")
 const Base = require("./base")
-const C = require("../model/channel.js")
+const channel = require("../model/channel.js")
 /**
  * 直播频道接口
  */
@@ -27,7 +23,7 @@ class Channel extends Base {
         this.routes.get("/", (context, next) => {
             this.renderJSON(context, {
                 status: 0,
-                data: C.get()
+                data: channel.get()
             })
         })
     }
@@ -41,7 +37,7 @@ class Channel extends Base {
     add() {
         this.routes.post("/", (context, next) => {
             let item = JSON.parse(context.request.body)
-            C.add(item)
+            channel.add(item)
             this.renderJSON(context, {
                 status: 0
             })
@@ -55,11 +51,11 @@ class Channel extends Base {
      */
     get() {
         this.routes.get("/:id", (context, next) => {
-            let channel = C.getOne(context.params.id)
-            if (channel) {
+            let c = channel.getOne(context.params.id)
+            if (c) {
                 this.renderJSON(context, {
                     status: 0,
-                    data: channel
+                    data: c
                 })
             } else {
                 this.renderJSON(context, {
@@ -92,7 +88,7 @@ class Channel extends Base {
      */
     end() {
         this.routes.del('/:id', (context, next) => {
-            C.done()
+            channel.done()
             this.renderJSON(context, {
                 status: 0
             })

@@ -1,5 +1,4 @@
 // @ts-check
-const Router = require("koa-router")
 const user = require("../model/user")
 const Base = require("./base")
 
