@@ -14,6 +14,7 @@ const socket = require("./socket")
 app.use((context, next) => {
     context.set('Access-Control-Allow-Origin', "*")
     context.set('Access-Control-Allow-Headers', "x-requested-with,content-type")
+    context.set("Access-Control-Allow-Methods", "*")
     return next()
 })
 app.use(bodyParser())
