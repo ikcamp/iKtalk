@@ -84,11 +84,11 @@ class Channel extends Base {
 
     /**
      * 停止直播
-     * + method DELETE
+     * + method GET
      * + URL /channel/:id
      */
     end() {
-        this.routes.del('/:id', (context, next) => {
+        this.routes.get('/:id', (context, next) => {
             channel.done()
             this.renderJSON(context, {
                 status: 0
