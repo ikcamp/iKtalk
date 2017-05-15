@@ -11,10 +11,10 @@ const bodyParser = require("koa-bodyparser")
 const route = require("./routes")
 const socket = require("./socket")
 
-app.use(async (context, next) => {
+app.use((context, next) => {
     context.set('Access-Control-Allow-Origin', "*")
     context.set('Access-Control-Allow-Headers', "x-requested-with,content-type")
-    return await next()
+    return next()
 })
 app.use(bodyParser())
 app.use(route.routes())

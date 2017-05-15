@@ -20,15 +20,19 @@ const C = {
         channels.push(item)
     },
     done(id) {
-        let item  = C.getOne(id)
-        item.done = true
-    },
-    ready(id){
         let item = C.getOne(id)
-        item.ready = true
+        if (item) {
+            item.done = true
+        }
     },
-    getOne(id){
-        return channels.find((item)=>{
+    ready(id) {
+        let item = C.getOne(id)
+        if (item) {
+            item.ready = true
+        }
+    },
+    getOne(id) {
+        return channels.find((item) => {
             return item.id === id
         })
     }

@@ -13,8 +13,8 @@ const mediaConstraints = {
 }
 let streamCb = null;
 
-// let socket = io('https://192.168.37.118:5801/test')
-let socket = io('https://localhost:5801/test')
+let socket = io('https://192.168.37.118:5801/test')
+// let socket = io('https://localhost:4413/test')
 
 socket.on('connect', () => {
   socket.emit('login', {
