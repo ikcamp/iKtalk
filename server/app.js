@@ -7,17 +7,10 @@ const fs = require("fs")
 const path = require("path")
 const http = require("http")
 const https = require("https")
-const uuid = require("node-uuid")
 const bodyParser = require("koa-bodyparser")
-const koaStatic = require("koa-static")
-
 const route = require("./routes")
 const socket = require("./socket")
 
-
-app.use(koaStatic(path.resolve(__dirname, "./demo/"), {
-    index: 'index.html'
-}))
 app.use(async (context, next) => {
     context.set('Access-Control-Allow-Origin', "*")
     context.set('Access-Control-Allow-Headers', "x-requested-with,content-type")
@@ -26,7 +19,6 @@ app.use(async (context, next) => {
 app.use(bodyParser())
 app.use(route.routes())
 app.use(route.allowedMethods())
-
 
 let callback = app.callback()
 const server = http.createServer(callback)
