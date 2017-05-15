@@ -88,7 +88,7 @@ class Channel extends Base {
      * + URL /channel/:id
      */
     end() {
-        this.routes.get('/:id', (context, next) => {
+        this.routes.get('/:id/end', (context, next) => {
             channel.done()
             this.renderJSON(context, {
                 status: 0
