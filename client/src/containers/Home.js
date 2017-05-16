@@ -7,24 +7,33 @@ class Home extends Component {
 
   constructor(props) {
     super(props)
+    this.state = {
+      channelList: []
+    }
   }
 
   componentDidMount() {
-    fetch('http://localhost:4412/channel', {
+    fetch('/channel', {
       mode: 'cors'
+    })
+    .then(res=>res.json())
+    .then(({ data })=>{
+      this.setState({ channelList: data })
     })
   }
 
   render() {
+    const { channelList } = this.state
     const { user = {} } = this.props
     return (
       <div>
-        <Link to="/config">我的房间</Link>
+        <Link to="/room/my">直播+</Link>
         <ul>
-          <li><Link to="/room/1">观看直播1</Link></li>
-          <li><Link to="/room/2">观看直播2</Link></li>
-          <li><Link to="/room/3">观看直播3</Link></li>
-          <li><Link to="/room/4">观看直播4</Link></li>
+          {
+            channelList.map(({ id, })=>(
+              <li key={id}><Link to={`/room/${id}`}>{id}</Link></li>
+            ))
+          }
         </ul>
       </div>
     )

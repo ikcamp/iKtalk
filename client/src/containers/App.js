@@ -1,7 +1,8 @@
 import React, { Component } from 'react'
 import {
   BrowserRouter as Router,
-  Route
+  Route,
+  Switch
 } from 'react-router-dom'
 import { Provider } from 'react-redux'
 import store from '../store'
@@ -39,7 +40,7 @@ class App extends Component {
   }
 
   addUser() {
-    fetch('http://localhost:4412/user', {
+    fetch('/user', {
       body: { id: 'testuser' }
     }).then(res=>res.json()).then(({ data })=>{
       this.setState({ user: data })
@@ -53,7 +54,7 @@ class App extends Component {
   }
 
   getUser(userId) {
-    fetch(`http://localhost:4412/user/${userId}`, {
+    fetch(`/user/${userId}`, {
       mode: 'cors'
     }).then(res=>res.json())
       .then(({ data })=>{
@@ -72,13 +73,12 @@ class App extends Component {
     return (
       <Provider store={store}>
         <Router>
-          <div>
+          <Switch>
             <Route exact path="/" component={Home}/>
             <Route path="/room/my" component={MyRoom}/>
-            <Route path={`/room/${user.id}`} component={MyRoom}/>
             <Route path="/room/:id" component={Room}/>
             <Route path="/config" component={Config}/>
-          </div>
+          </Switch>
         </Router>
       </Provider>
     )

@@ -16,12 +16,12 @@ class Config extends Component {
   componentDidMount() {
     const { user } = this.props
     if (user) {
-      fetch(`http://localhost:4412/channel/${user.id}`)
+      fetch(`/channel/${user.id}`)
       .then(res=>res.json())
       .then(({ status, message, data })=>{
         console.log('channel info', data)
         if (status !== 0) {
-          fetch('http://localhost:4412/channel', {
+          fetch('/channel', {
             body: { id: user.id }
           })
         } else {
@@ -36,11 +36,12 @@ class Config extends Component {
 
   begin() {
     const { user, history } = this.props
-    fetch(`http://localhost:4412/channel/${user.id}/begin`)
+    fetch(`/channel/${user.id}/begin`)
     .then(res=>res.json())
     .then(({ status }) => {
       if (status === 0) {
-        history.push(`/room/${user.id}`)
+        // history.push(`/room/${user.id}`)
+        history.push(`/room/my`)
       }
     })
   }
