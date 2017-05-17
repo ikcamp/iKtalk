@@ -13,6 +13,7 @@ import MyRoom from './MyRoom'
 import fetch from '../fetch'
 import '../style/App.css'
 
+
 class App extends Component {
 
   constructor(props) {
@@ -41,7 +42,7 @@ class App extends Component {
 
   addUser() {
     fetch('/user', {
-      body: { id: 'testuser' }
+      body: {}
     }).then(res=>res.json()).then(({ data })=>{
       this.setState({ user: data })
       store.dispatch({
@@ -69,7 +70,6 @@ class App extends Component {
   }
 
   render() {
-    const { user = {} } = this.state
     return (
       <Provider store={store}>
         <Router>

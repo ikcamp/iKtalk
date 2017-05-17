@@ -1,15 +1,21 @@
 import React, { Component } from 'react'
-import * as webRTCServices from '../lib/services'
 import { connect } from 'react-redux'
 import MediaStreamRecorder from 'msr'
+// import MediaStreamRecorder from '../lib/MediaStreamRecorder'
+import MediaStreamTransfer from '../lib/MediaStreamTransfer'
 import fetch from '../fetch'
+import config from '../config'
+
+const { httpServer, httpsServer, httpsHost, httpsPort } = config
+const CLIENT_WIDTH = document.documentElement.clientWidth
+const CLIENT_HEIGHT = document.documentElement.clientHeight
 
 const mediaConstraints = {
   audio: true,
   video: {
     mandatory: {
-      minWidth: 500, // Provide your own width, height and frame rate here
-      minHeight: 300,
+      minWidth: CLIENT_WIDTH,
+      minHeight: CLIENT_HEIGHT,
       minFrameRate: 30
     }
   }
@@ -54,24 +60,29 @@ class MyRoom extends Component {
   }
 
   getLocalStream(callback) {
-    navigator.mediaDevices.getUserMedia(mediaConstraints)
-      .then((stream) => {
-        callback(stream)
-        var mediaRecorder = new MediaStreamRecorder(stream)
+    // let mediaRecorder = this.mediaRecorder = new MediaStreamRecorder()
+    navigator.mediaDevices.getUserMedia(mediaConstraints).then(stream=>{
+      callback(stream)
+      try {
+        let mediaRecorder = this.mediaRecorder = new MediaStreamRecorder(stream)
         mediaRecorder.mimeType = 'video/webm'
         mediaRecorder.ondataavailable = (blob) => {
+        // mediaRecorder.onDataAvailable = (blob) => {
           if (this.state.status === MyRoom.LIVE_STATUS.SOCKET_CONNECTED) {
             this.setState({ status: MyRoom.LIVE_STATUS.LIVING })
           }
           if (this.state.status === MyRoom.LIVE_STATUS.SOCKET_CONNECTED || this.state.status === MyRoom.LIVE_STATUS.LIVING) {
-            webRTCServices.uploadStream(blob)
+            if (this.mediaStreamTransfer && this.mediaStreamTransfer.isConnected) this.mediaStreamTransfer.upload(blob)
           }
         }
         mediaRecorder.start(3000)
-      })
-      .catch((e)=>{
-        console.error('media error', e) 
-      })
+      } catch(e) {
+        console.error(e)
+      }
+    })
+    .catch((e)=>{
+      console.error('media error', e) 
+    })
   }
 
   begin(id) {
@@ -103,7 +114,6 @@ class MyRoom extends Component {
           })
           .then(res=>res.json())
           .then(({ status, data }) => {
-            console.log(status, data)
             resolve()
           }).catch(reject)
         } else {
@@ -117,13 +127,13 @@ class MyRoom extends Component {
   }
 
   connectServer(id) {
-    webRTCServices.connect(id, ()=>{
-      this.setState({ status: MyRoom.LIVE_STATUS.SOCKET_CONNECTED })
-      console.log('server connected')
-    })
+    let mediaStreamTransfer = this.mediaStreamTransfer = new MediaStreamTransfer({ server: httpServer })
+    mediaStreamTransfer.connect(id)
+    this.setState({ status: MyRoom.LIVE_STATUS.SOCKET_CONNECTED })
   }
 
   end() {
+    this.mediaRecorder && this.mediaRecorder.stop()
     const { user, history } = this.props
     // if (this.state.status !== MyRoom.LIVE_STATUS.SOCKET_CONNECTED) return
     fetch(`/channel/${user.id}/end`)
@@ -141,8 +151,10 @@ class MyRoom extends Component {
   render() {
     return (
       <div>
-        <video src={this.state.stream} autoPlay></video>
-        <a onClick={this.end.bind(this)}>结束直播</a>
+        <video src={this.state.stream} autoPlay style={{ width: '100%', height: `${CLIENT_HEIGHT}px` }}></video>
+        <div style={{ position: 'absolute' }}>
+          <a onClick={this.end.bind(this)}>结束直播</a>
+        </div>
       </div>
     )
   }

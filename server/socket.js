@@ -20,7 +20,6 @@ const MAX_VIDEO_FILES = 2
 class Socket {
     constructor(id) {
         this.id = id
-        console.log(id)
         this.ns = instance.of(`/${id}`)
         this.init()
         this.videos = []
@@ -34,7 +33,6 @@ class Socket {
              * socket 连接后，告知socket当前用户信息 
              */
             socket.on("login", (data) => {
-                console.log(data)
                 socket.user = data
             })
             /**

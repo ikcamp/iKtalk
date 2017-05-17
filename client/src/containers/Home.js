@@ -24,7 +24,6 @@ class Home extends Component {
 
   render() {
     const { channelList } = this.state
-    const { user = {} } = this.props
     return (
       <div>
         <Link to="/room/my">直播+</Link>

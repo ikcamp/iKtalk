@@ -1,5 +1,8 @@
+import config from './config'
+const { httpServer, httpsServer } = config
+
 export default function(url, { method, body, headers, ...others } = {}) {
-  return fetch( 'https://192.168.37.118:5801' + url, {
+  return fetch(`${httpServer}${url}`, {
     method: method || (body ? 'POST' : 'GET'),
     body: JSON.stringify(body),
     mode: 'cors',
