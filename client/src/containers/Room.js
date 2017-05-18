@@ -48,7 +48,7 @@ class Room extends Component {
   render() {
     return (
       <div>
-        <video autoPlay controls ref="video" width="500" height="300"></video>
+        <video autoPlay controls ref="video" width="100%" height="100%"></video>
       </div>
     )
   }

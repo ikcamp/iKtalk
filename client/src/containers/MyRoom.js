@@ -66,6 +66,10 @@ class MyRoom extends Component {
       try {
         let mediaRecorder = this.mediaRecorder = new MediaStreamRecorder(stream)
         mediaRecorder.mimeType = 'video/webm'
+        mediaRecorder.canvas = {
+          width: CLIENT_WIDTH,
+          height: CLIENT_HEIGHT
+        }
         mediaRecorder.ondataavailable = (blob) => {
         // mediaRecorder.onDataAvailable = (blob) => {
           if (this.state.status === MyRoom.LIVE_STATUS.SOCKET_CONNECTED) {
