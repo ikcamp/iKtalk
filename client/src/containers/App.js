@@ -1,7 +1,8 @@
 import React, { Component } from 'react'
 import {
   BrowserRouter as Router,
-  Route
+  Route,
+  Switch
 } from 'react-router-dom'
 import { Provider } from 'react-redux'
 import store from '../store'
@@ -11,6 +12,7 @@ import Room from './Room'
 import MyRoom from './MyRoom'
 import fetch from '../fetch'
 import '../style/App.css'
+
 
 class App extends Component {
 
@@ -39,8 +41,8 @@ class App extends Component {
   }
 
   addUser() {
-    fetch('http://localhost:4412/user', {
-      body: { id: 'testuser' }
+    fetch('/user', {
+      body: {}
     }).then(res=>res.json()).then(({ data })=>{
       this.setState({ user: data })
       store.dispatch({
@@ -53,7 +55,7 @@ class App extends Component {
   }
 
   getUser(userId) {
-    fetch(`http://localhost:4412/user/${userId}`, {
+    fetch(`/user/${userId}`, {
       mode: 'cors'
     }).then(res=>res.json())
       .then(({ data })=>{
@@ -68,17 +70,15 @@ class App extends Component {
   }
 
   render() {
-    const { user = {} } = this.state
     return (
       <Provider store={store}>
         <Router>
-          <div>
+          <Switch>
             <Route exact path="/" component={Home}/>
             <Route path="/room/my" component={MyRoom}/>
-            <Route path={`/room/${user.id}`} component={MyRoom}/>
             <Route path="/room/:id" component={Room}/>
             <Route path="/config" component={Config}/>
-          </div>
+          </Switch>
         </Router>
       </Provider>
     )
