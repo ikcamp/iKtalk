@@ -107,7 +107,6 @@ class Socket {
 
     _remove() {
         let id = this.id
-        sockets[id] = null
         delete sockets[id]
     }
 
