@@ -89,7 +89,8 @@ class Channel extends Base {
      */
     end() {
         this.routes.get('/:id/end', (context, next) => {
-            channel.done()
+             let id = context.params.id
+            channel.done(id)
             this.renderJSON(context, {
                 status: 0
             })
@@ -103,7 +104,6 @@ class Channel extends Base {
         this.routes.get('/:id/playlist', (context, next) => {
             let id = context.params.id
             let s = socket.getSocket(id)
-            context.set('Access-Control-Allow-Origin', "*")
             context.set('Content-Type', 'application/x-mpegURL')
             context.body = s.getM3U()
         })
