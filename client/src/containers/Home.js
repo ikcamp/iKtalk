@@ -26,7 +26,7 @@ class Home extends Component {
     const { channelList } = this.state
     return (
       <div>
-        <Link to="/room/my">直播+</Link>
+        <Link to="/room/host">直播+</Link>
         <ul>
           {
             channelList.map(({ id, })=>(

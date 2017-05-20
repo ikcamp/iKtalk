@@ -49,7 +49,7 @@ const styles = {
   }
 }
 
-export default class MyRoom extends Component {
+export default class HostRoom extends Component {
 
   constructor(props) {
     super(props)

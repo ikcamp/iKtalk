@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import Room from '../components/Room'
+import Room from '../components/VisitorRoom'
 import Hls from 'hls.js'
 import fetch from '../fetch'
 import config from '../config'
