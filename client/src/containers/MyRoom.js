@@ -5,6 +5,10 @@ import MediaStreamRecorder from 'msr'
 import MediaStreamTransfer from '../lib/MediaStreamTransfer'
 import fetch from '../fetch'
 import config from '../config'
+import MakeSocket from '../lib/MakeSocket'
+import BarrageInput from '../components/BarrageInput'
+import BarrageList from '../components/BarrageList'
+
 
 const { httpServer, httpsServer, httpsHost, httpsPort } = config
 const CLIENT_WIDTH = document.documentElement.clientWidth
@@ -85,7 +89,7 @@ class MyRoom extends Component {
       }
     })
     .catch((e)=>{
-      console.error('media error', e) 
+      console.error('media error', e)
     })
   }
 
@@ -156,6 +160,8 @@ class MyRoom extends Component {
     return (
       <div>
         <video src={this.state.stream} autoPlay style={{ width: '100%', height: `${CLIENT_HEIGHT}px` }}></video>
+        <BarrageList />
+        <BarrageInput />
         <div style={{ position: 'absolute' }}>
           <a onClick={this.end.bind(this)}>结束直播</a>
         </div>
