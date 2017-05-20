@@ -10,6 +10,8 @@ import Home from './Home'
 import Config from './Config'
 import Room from './Room'
 import MyRoom from './MyRoom'
+import RoomComponent from '../components/Room'
+import MyRoomComponent from '../components/MyRoom'
 import fetch from '../fetch'
 import '../style/App.css'
 
@@ -77,6 +79,8 @@ class App extends Component {
             <Route exact path="/" component={Home}/>
             <Route path="/room/my" component={MyRoom}/>
             <Route path="/room/:id" component={Room}/>
+            <Route path="/r/my" component={MyRoomComponent}/>
+            <Route path="/r/:id" component={RoomComponent}/>
             <Route path="/config" component={Config}/>
           </Switch>
         </Router>

@@ -1,26 +1,19 @@
 import React, { Component } from 'react'
-import ReactDOM from 'react-dom'
+import Room from '../components/Room'
 import Hls from 'hls.js'
 import fetch from '../fetch'
 import config from '../config'
 
 const { httpServer, httpsServer, httpsHost, httpsPort } = config
 
-class Room extends Component {
+class RoomContainer extends Component {
 
   componentDidMount() {
     const { match } = this.props
     if(Hls.isSupported()) {
       this.getChannel(match.params.id).then(({ playUrl }) => {
-        var video = ReactDOM.findDOMNode(this.refs.video)
-        var hls = new Hls()
-        hls.loadSource(`${httpServer}${playUrl}`)
-        hls.attachMedia(video)
-        hls.on(Hls.Events.MANIFEST_PARSED,function() {
-          video.play()
-        })
-        hls.on(Hls.Events.ERROR, (e, err)=>{
-          console.log(e, err)
+        this.setState({
+          playUrl: `${httpServer}${playUrl}`
         })
       })
     }
@@ -45,13 +38,27 @@ class Room extends Component {
     })
   }
 
+  /**
+   * 后退
+   * 
+   * 
+   * @memberof MyRoomContainer
+   */
+  handleExit = () => {
+    const { history } = this.props
+    history.goBack(-1)
+  }
+
   render() {
+    const { handleExit } = this
     return (
-      <div>
-        <video autoPlay controls ref="video" width="100%" height="100%"></video>
-      </div>
+      <Room
+        {...this.props}
+        {...this.state}
+         onExitRoom={handleExit}
+      />
     )
   }
 }
 
-export default Room
+export default RoomContainer

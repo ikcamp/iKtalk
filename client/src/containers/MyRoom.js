@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
+import MyRoom from '../components/MyRoom'
 import MediaStreamRecorder from 'msr'
 // import MediaStreamRecorder from '../lib/MediaStreamRecorder'
 import MediaStreamTransfer from '../lib/MediaStreamTransfer'
@@ -11,17 +12,22 @@ const CLIENT_WIDTH = document.documentElement.clientWidth
 const CLIENT_HEIGHT = document.documentElement.clientHeight
 
 const mediaConstraints = {
-  audio: true,
+  audio: false,
   video: {
-    mandatory: {
-      minWidth: CLIENT_WIDTH,
-      minHeight: CLIENT_HEIGHT,
-      minFrameRate: 30
-    }
+    width: CLIENT_WIDTH,
+    height: CLIENT_HEIGHT,
+    frameRate: 30,
+    // facingMode: { exact: 'environment' }
+    // facingMode: 'user',
+    // mandatory: {
+    //   minWidth: CLIENT_WIDTH,
+    //   minHeight: CLIENT_HEIGHT,
+    //   minFrameRate: 30
+    // }
   }
 }
 
-class MyRoom extends Component {
+class MyRoomContainer extends Component {
 
   static LIVE_STATUS = {
     IDLE: 0, // 空闲中
@@ -34,7 +40,7 @@ class MyRoom extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      status: MyRoom.LIVE_STATUS.IDLE
+      status: MyRoomContainer.LIVE_STATUS.IDLE
     }
   }
 
@@ -48,20 +54,97 @@ class MyRoom extends Component {
     if (this.props.user) {
       this.begin(this.props.user.id)
     }
-    this.getLocalStream(stream => {
+    this.initMedias()
+  }
+
+  /**
+   * 退出的时候，结束直播
+   * 
+   * 
+   * @memberof MyRoomContainer
+   */
+  componentWillUnmount() {
+    this.handleLiveOver()
+  }
+
+  /**
+   * 切换前后摄像头
+   *
+   * @memberof MyRoomContainer
+   */
+  toggleCamera = () => {
+    if (this.mediaRecorder) {
+      this.mediaRecorder.stop()
+    }
+    const { cameras, cameraIndex } = this.state
+    let newCameraIndex = cameraIndex ? 0 : 1
+    let newCamera = cameras[newCameraIndex]
+    this.getLocalStream({
+      ...mediaConstraints,
+      video: {
+        ...mediaConstraints.video,
+        deviceId: newCamera.deviceId
+      },
+    }, stream => {
       this.setState({
+        _loading_: true,
+        cameraIndex: newCameraIndex,
+        stream: window.URL.createObjectURL(stream)
+      }, ()=>this.setState({ _loading_: false }))
+    })
+  }
+
+
+  /**
+   * 初始化媒体设备
+   * 
+   * 
+   * @memberof MyRoomContainer
+   */
+  initMedias() {
+    this.getCameras()
+    this.getLocalStream(mediaConstraints, stream => {
+      this.setState({
+        cameraIndex: 0,
         stream: window.URL.createObjectURL(stream)
       })
     })
   }
 
-  componentWillUnmount() {
-    this.end()
+
+  /**
+   * 获取支持的摄像头列表
+   * 
+   * 
+   * @memberof MyRoomContainer
+   */
+  getCameras() {
+    let cameras = []
+    navigator.mediaDevices.enumerateDevices().then((mediaDeviceInfos) => { 
+      for (var i = 0; i != mediaDeviceInfos.length; ++i) {  
+        var mediaDeviceInfo = mediaDeviceInfos[i];  
+        //这里会遍历audio,video，所以要加以区分  
+        if (mediaDeviceInfo.kind === 'videoinput') {  
+           cameras.push(mediaDeviceInfo)
+        }
+      }
+      this.setState({
+        cameras
+      })
+    })
   }
 
-  getLocalStream(callback) {
+  /**
+   * 获取本地媒体流
+   * 
+   * @param {any} constraints 
+   * @param {any} callback 
+   * 
+   * @memberof MyRoomContainer
+   */
+  getLocalStream(constraints, callback) {
     // let mediaRecorder = this.mediaRecorder = new MediaStreamRecorder()
-    navigator.mediaDevices.getUserMedia(mediaConstraints).then(stream=>{
+    navigator.mediaDevices.getUserMedia(constraints).then(stream=>{
       callback(stream)
       try {
         let mediaRecorder = this.mediaRecorder = new MediaStreamRecorder(stream)
@@ -72,16 +155,16 @@ class MyRoom extends Component {
         }
         mediaRecorder.ondataavailable = (blob) => {
         // mediaRecorder.onDataAvailable = (blob) => {
-          if (this.state.status === MyRoom.LIVE_STATUS.SOCKET_CONNECTED) {
-            this.setState({ status: MyRoom.LIVE_STATUS.LIVING })
+          if (this.state.status === MyRoomContainer.LIVE_STATUS.SOCKET_CONNECTED) {
+            this.setState({ status: MyRoomContainer.LIVE_STATUS.LIVING })
           }
-          if (this.state.status === MyRoom.LIVE_STATUS.SOCKET_CONNECTED || this.state.status === MyRoom.LIVE_STATUS.LIVING) {
+          if (this.state.status === MyRoomContainer.LIVE_STATUS.SOCKET_CONNECTED || this.state.status === MyRoomContainer.LIVE_STATUS.LIVING) {
             if (this.mediaStreamTransfer && this.mediaStreamTransfer.isConnected) this.mediaStreamTransfer.upload(blob)
           }
         }
         mediaRecorder.start(3000)
       } catch(e) {
-        console.error(e)
+        alert(e)
       }
     })
     .catch((e)=>{
@@ -89,15 +172,22 @@ class MyRoom extends Component {
     })
   }
 
+  /**
+   * 通知服务器开始直播，如果频道不存在，则创建频道
+   * 
+   * @param {any} id 
+   * 
+   * @memberof MyRoomContainer
+   */
   begin(id) {
-    if (this.state.status !== MyRoom.LIVE_STATUS.IDLE) return
+    if (this.state.status !== MyRoomContainer.LIVE_STATUS.IDLE) return
     this.getChannel(id).then(()=>{
       fetch(`/channel/${id}/begin`)
       .then(res=>res.json())
       .then(({ status }) => {
         if (status === 0) {
           this.setState({
-            status: MyRoom.LIVE_STATUS.BEGIN
+            status: MyRoomContainer.LIVE_STATUS.BEGIN
           }, ()=>this.connectServer(id))
         } else {
           window.alert('开始直播异常')
@@ -106,6 +196,14 @@ class MyRoom extends Component {
     }).catch(e=>console.log('get channel error', e))
   }
 
+  /**
+   * 获取频道信息
+   * 
+   * @param {any} id 
+   * @returns 
+   * 
+   * @memberof MyRoomContainer
+   */
   getChannel(id) {
     return new Promise((resolve, reject) =>{
       fetch(`/channel/${id}`)
@@ -130,40 +228,65 @@ class MyRoom extends Component {
     })
   }
 
+  /**
+   * 连接Socket服务器
+   * 
+   * @param {any} id 
+   * 
+   * @memberof MyRoomContainer
+   */
   connectServer(id) {
     let mediaStreamTransfer = this.mediaStreamTransfer = new MediaStreamTransfer({ server: httpServer })
     mediaStreamTransfer.connect(id)
-    this.setState({ status: MyRoom.LIVE_STATUS.SOCKET_CONNECTED })
+    this.setState({ status: MyRoomContainer.LIVE_STATUS.SOCKET_CONNECTED })
   }
 
-  end() {
+  /**
+   * 直播结束时，通知服务器结束
+   * 
+   * 
+   * @memberof MyRoomContainer
+   */
+  handleLiveOver = () => {
     this.mediaRecorder && this.mediaRecorder.stop()
     const { user, history } = this.props
-    // if (this.state.status !== MyRoom.LIVE_STATUS.SOCKET_CONNECTED) return
+    // if (this.state.status !== MyRoomContainer.LIVE_STATUS.SOCKET_CONNECTED) return
     fetch(`/channel/${user.id}/end`)
     .then(res=>res.json())
     .then(({ status }) => {
       if (status === 0) {
-        this.setState({ status: MyRoom.LIVE_STATUS.END })
-        history.goBack(-1)
+        // this.setState({ status: MyRoomContainer.LIVE_STATUS.END })
+        // history.goBack(-1)
       } else {
         window.alert('结束直播异常')
       }
     })
   }
 
-  render() {
+  /**
+   * 退出房间
+   * 
+   * 
+   * @memberof MyRoomContainer
+   */
+  handleExit = () => {
+    const { history } = this.props
+    history.goBack(-1)
+  }
+
+  render() { 
+    const { toggleCamera, handleExit } = this
     return (
-      <div>
-        <video src={this.state.stream} autoPlay style={{ width: '100%', height: `${CLIENT_HEIGHT}px` }}></video>
-        <div style={{ position: 'absolute' }}>
-          <a onClick={this.end.bind(this)}>结束直播</a>
-        </div>
-      </div>
+      <MyRoom
+        {...this.props}
+        {...this.state}
+        onToggleCamera={toggleCamera}
+        onExitRoom={handleExit}
+      />
     )
   }
 }
 
 export default connect(state=>({
   user: state.user
-}))(MyRoom)
+}))(MyRoomContainer)
