@@ -7,12 +7,9 @@ import {
 import { Provider } from 'react-redux'
 import store from '../store'
 import Home from './Home'
-import Config from './Config'
-import Room from './Room'
-import MyRoom from './MyRoom'
+import HostRoom from './HostRoom'
+import VisitorRoom from './VisitorRoom'
 import fetch from '../fetch'
-import '../style/App.css'
-
 
 class App extends Component {
 
@@ -22,6 +19,7 @@ class App extends Component {
   }
 
   componentDidMount() {
+    // 从localStorage中获取用户登录状态
     let userStr = localStorage.getItem('user')
     if (!userStr) {
       this.addUser()
@@ -40,6 +38,12 @@ class App extends Component {
     }
   }
 
+  /**
+   * 创建用户
+   * 
+   * 
+   * @memberof App
+   */
   addUser() {
     fetch('/user', {
       body: {}
@@ -49,11 +53,19 @@ class App extends Component {
         type: 'UPDATE_USER',
         payload: data
       })
+      // 保存用户登录状态到localStorage中
       localStorage.setItem('user', JSON.stringify(data))
       console.debug('new user', data)
     })
   }
 
+  /**
+   * 获取用户
+   * 
+   * @param {any} userId 
+   * 
+   * @memberof App
+   */
   getUser(userId) {
     fetch(`/user/${userId}`, {
       mode: 'cors'
@@ -64,6 +76,7 @@ class App extends Component {
           type: 'UPDATE_USER',
           payload: data
         })
+        // 保存用户登录状态到localStorage中
         localStorage.setItem('user', JSON.stringify(data))
         console.debug('user from cache', data)
       })
@@ -75,9 +88,8 @@ class App extends Component {
         <Router>
           <Switch>
             <Route exact path="/" component={Home}/>
-            <Route path="/room/my" component={MyRoom}/>
-            <Route path="/room/:id" component={Room}/>
-            <Route path="/config" component={Config}/>
+            <Route path="/room/host" component={HostRoom}/>
+            <Route path="/room/:id" component={VisitorRoom}/>
           </Switch>
         </Router>
       </Provider>
