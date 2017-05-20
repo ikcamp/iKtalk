@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import Toast from './Toast'
 const CLIENT_WIDTH = document.documentElement.clientWidth
 const CLIENT_HEIGHT = document.documentElement.clientHeight
 
@@ -77,7 +78,10 @@ export default class HostRoom extends Component {
     this.setState({
       controlPanelVisible: true
     }, ()=>{
-      this.hideTimer = setTimeout(()=>{this.setState({ controlPanelVisible: false })}, 3000)
+      this.hideTimer = setTimeout(()=>{
+        this.setState({ controlPanelVisible: false })
+        this.showToast('触碰屏幕显示菜单')
+      }, 3000)
     })
 
   }
@@ -85,6 +89,10 @@ export default class HostRoom extends Component {
   componentWillUnmount() {
     this.unmounted = true
     clearTimeout(this.hideTimer)
+  }
+
+  showToast = (message) => {
+    this.refs.toast && this.refs.toast.show(message)
   }
 
   render() {
@@ -98,6 +106,7 @@ export default class HostRoom extends Component {
           <a onClick={onExitRoom} style={styles.backBtn}></a>
           { cameras.length >= 2 && <a onClick={onToggleCamera} style={styles.toggleCameraBtn}></a> }
         </div>
+        <Toast duration={2000} ref="toast" />
       </div>
     )
   }

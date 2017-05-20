@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import ReactDOM from 'react-dom'
+import Toast from './Toast'
 import Hls from 'hls.js'
 const videoSrc = require('../containers/3.mp4')
 const CLIENT_WIDTH = document.documentElement.clientWidth
@@ -68,6 +69,7 @@ export default class MyRoom extends Component {
     }, 3000)
     let video = this.video = ReactDOM.findDOMNode(this.refs.video)
     playUrl && this.loadSource(playUrl)
+    this.showToast('连接中...', 99999)
   }
 
   componentWillReceiveProps(nextProps) {
@@ -86,8 +88,12 @@ export default class MyRoom extends Component {
       video.play()
     })
     hls.on(Hls.Events.ERROR, (e, err)=>{
-      console.log(e, err)
+      if (err.type === 'networkError') {
+        this.showToast('解析地址出错')
+      }
+      console.debug(e, err)
     })
+    this.showToast('连接成功', 2000)
   }
 
   handleTouch = () => {
@@ -95,7 +101,10 @@ export default class MyRoom extends Component {
     this.setState({
       controlPanelVisible: true
     }, ()=>{
-      this.hideTimer = setTimeout(()=>{this.setState({ controlPanelVisible: false })}, 3000)
+      this.hideTimer = setTimeout(()=>{
+        this.setState({ controlPanelVisible: false })
+        this.showToast('触碰屏幕显示菜单')
+      }, 3000)
     })
 
   }
@@ -105,15 +114,21 @@ export default class MyRoom extends Component {
     clearTimeout(this.hideTimer)
   }
 
+  showToast = (message) => {
+    this.refs.toast && this.refs.toast.show(message)
+  }
+
   render() {
+    const { handleTouch } = this
     const { controlPanelVisible } = this.state
-    const { onExitRoom, stream } = this.props
+    const { onExitRoom, stream,  showToast } = this.props
     return (
-      <div style={styles.room}>
+      <div style={styles.room} onClick={handleTouch}>
         <video src={videoSrc} autoPlay style={styles.video} ref="video"></video>
          <div style={{ ...styles.controlPanel, visibility: controlPanelVisible ? 'visible' : 'hidden' }}>
           <a onClick={onExitRoom} style={styles.backBtn}></a>
         </div>
+        <Toast duration={2000} ref="toast" />
       </div>
     )
   }
