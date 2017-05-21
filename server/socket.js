@@ -78,11 +78,9 @@ class Socket {
              * 弹幕，接收客户端的message，然后直接广播出去
              */
             socket.on('new message', (data) => {
-                console.log(data)
-                socket.broadcast.emit('message', {
+                socket.broadcast.emit('new message', {
                   message: data
-                });
-                //this.ns.emit('message', data)
+                })
             })
             /**
              * 当用户断开socket连接的时候，修改直播频道状态

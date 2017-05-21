@@ -2,8 +2,9 @@ import React, { Component } from 'react'
 import ReactDOM from 'react-dom'
 import { Link } from 'react-router-dom'
 import Toast from './Toast'
-import BarrageInput from './BarrageInput'
 import Hls from 'hls.js'
+import BarrageList from './BarrageList'
+import BarrageInput from './BarrageInput'
 import { VISITOR_ROOM_ERROR_STATUS, VISITOR_ROOM_ERROR_MESSAGE } from '../consts'
 
 const videoSrc = require('../containers/3.mp4')
@@ -168,9 +169,10 @@ export default class VisitorRoom extends Component {
         <video src={videoSrc} autoPlay style={styles.video} ref="video"></video>
         <div style={{ ...styles.controlPanel, visibility: controlPanelVisible ? 'visible' : 'hidden' }}>
           <Link to="/" style={styles.backBtn}/>
-          <BarrageInput user={user}/>
         </div>
         <Toast duration={2000} ref="toast" />
+        <BarrageList user={this.props.match.params}/>
+        <BarrageInput user={this.props.match.params}/>
       </div>
     )
   }
