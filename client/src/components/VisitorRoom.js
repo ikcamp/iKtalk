@@ -2,6 +2,9 @@ import React, { Component } from 'react'
 import ReactDOM from 'react-dom'
 import Toast from './Toast'
 import Hls from 'hls.js'
+import BarrageList from './BarrageList'
+import BarrageInput from './BarrageInput'
+
 const videoSrc = require('../containers/3.mp4')
 const CLIENT_WIDTH = document.documentElement.clientWidth
 const CLIENT_HEIGHT = document.documentElement.clientHeight
@@ -129,6 +132,8 @@ export default class MyRoom extends Component {
           <a onClick={onExitRoom} style={styles.backBtn}></a>
         </div>
         <Toast duration={2000} ref="toast" />
+        <BarrageList user={this.props.match.params}/>
+        <BarrageInput user={this.props.match.params}/>
       </div>
     )
   }

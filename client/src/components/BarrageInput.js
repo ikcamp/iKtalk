@@ -10,8 +10,8 @@ export default class BarrageInput extends Component {
       let uid = this.props.user.id
       let barrage = ReactDOM.findDOMNode(this.refs.barrageMessage)
       if (uid && barrage.value) {
-        let socket = new MakeSocket(uid);
-        socket.sendBarrage(barrage.value);
+        let aSocket = new MakeSocket(uid)
+        aSocket.sendBarrage(barrage.value)
         barrage.value = ''
       }
     }
