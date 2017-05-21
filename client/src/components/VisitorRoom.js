@@ -4,12 +4,9 @@ import { Link } from 'react-router-dom'
 import Toast from './Toast'
 import BarrageInput from './BarrageInput'
 import Hls from 'hls.js'
-<<<<<<< HEAD
 import BarrageList from './BarrageList'
 import BarrageInput from './BarrageInput'
-=======
 import { VISITOR_ROOM_ERROR_STATUS, VISITOR_ROOM_ERROR_MESSAGE } from '../consts'
->>>>>>> fa4226467d519e8333f7a4677e96cd190707df3a
 
 const videoSrc = require('../containers/3.mp4')
 const CLIENT_WIDTH = document.documentElement.clientWidth
