@@ -59,8 +59,8 @@ class HostRoomContainer extends Component {
 
   /**
    * 退出的时候，结束直播
-   * 
-   * 
+   *
+   *
    * @memberof HostRoomContainer
    */
   componentWillUnmount() {
@@ -97,8 +97,8 @@ class HostRoomContainer extends Component {
 
   /**
    * 初始化媒体设备
-   * 
-   * 
+   *
+   *
    * @memberof HostRoomContainer
    */
   initMedias() {
@@ -114,17 +114,17 @@ class HostRoomContainer extends Component {
 
   /**
    * 获取支持的摄像头列表
-   * 
-   * 
+   *
+   *
    * @memberof HostRoomContainer
    */
   getCameras() {
     let cameras = []
-    navigator.mediaDevices.enumerateDevices().then((mediaDeviceInfos) => { 
-      for (var i = 0; i != mediaDeviceInfos.length; ++i) {  
-        var mediaDeviceInfo = mediaDeviceInfos[i];  
-        //这里会遍历audio,video，所以要加以区分  
-        if (mediaDeviceInfo.kind === 'videoinput') {  
+    navigator.mediaDevices.enumerateDevices().then((mediaDeviceInfos) => {
+      for (var i = 0; i != mediaDeviceInfos.length; ++i) {
+        var mediaDeviceInfo = mediaDeviceInfos[i];
+        //这里会遍历audio,video，所以要加以区分
+        if (mediaDeviceInfo.kind === 'videoinput') {
            cameras.push(mediaDeviceInfo)
         }
       }
@@ -136,10 +136,10 @@ class HostRoomContainer extends Component {
 
   /**
    * 获取本地媒体流
-   * 
-   * @param {any} constraints 
-   * @param {any} callback 
-   * 
+   *
+   * @param {any} constraints
+   * @param {any} callback
+   *
    * @memberof HostRoomContainer
    */
   getLocalStream(constraints, callback) {
@@ -168,15 +168,15 @@ class HostRoomContainer extends Component {
       }
     })
     .catch((e)=>{
-      console.error('media error', e) 
+      console.error('media error', e)
     })
   }
 
   /**
    * 通知服务器开始直播，如果频道不存在，则创建频道
-   * 
-   * @param {any} id 
-   * 
+   *
+   * @param {any} id
+   *
    * @memberof HostRoomContainer
    */
   begin(id) {
@@ -198,10 +198,10 @@ class HostRoomContainer extends Component {
 
   /**
    * 获取频道信息
-   * 
-   * @param {any} id 
-   * @returns 
-   * 
+   *
+   * @param {any} id
+   * @returns
+   *
    * @memberof HostRoomContainer
    */
   getChannel(id) {
@@ -230,9 +230,9 @@ class HostRoomContainer extends Component {
 
   /**
    * 连接Socket服务器
-   * 
-   * @param {any} id 
-   * 
+   *
+   * @param {any} id
+   *
    * @memberof HostRoomContainer
    */
   connectServer(id) {
@@ -243,8 +243,8 @@ class HostRoomContainer extends Component {
 
   /**
    * 直播结束时，通知服务器结束
-   * 
-   * 
+   *
+   *
    * @memberof HostRoomContainer
    */
   handleLiveOver = () => {
@@ -265,8 +265,8 @@ class HostRoomContainer extends Component {
 
   /**
    * 退出房间
-   * 
-   * 
+   *
+   *
    * @memberof HostRoomContainer
    */
   handleExit = () => {
@@ -274,7 +274,7 @@ class HostRoomContainer extends Component {
     history.goBack(-1)
   }
 
-  render() { 
+  render() {
     const { toggleCamera, handleExit } = this
     return (
       <HostRoom

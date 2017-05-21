@@ -12,3 +12,22 @@ body {
   margin: 0;
   padding: 0;
 }
+
+.barrage-input-container {
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  height: 30px;
+  display: flex;
+}
+.barrage-input-text {
+  flex: 8;
+  border:1px solid #d2a000;
+}
+.barrage-input-submit {
+  flex: 2;
+  background-color: #d2a000;
+  color: #fff;
+  border:1px solid #d2a000;
+  box-shadow: 0 1px 2px #fedd71 inset,0 -1px 0 #a38b39 inset,0 -2px 3px #fedd71 inset;
+}

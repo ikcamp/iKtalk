@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import Toast from './Toast'
+import BarrageInput from './BarrageInput'
 const CLIENT_WIDTH = document.documentElement.clientWidth
 const CLIENT_HEIGHT = document.documentElement.clientHeight
 
@@ -107,6 +108,7 @@ export default class HostRoom extends Component {
           { cameras.length >= 2 && <a onClick={onToggleCamera} style={styles.toggleCameraBtn}></a> }
         </div>
         <Toast duration={2000} ref="toast" />
+        <BarrageInput user={this.props.user}/>
       </div>
     )
   }
