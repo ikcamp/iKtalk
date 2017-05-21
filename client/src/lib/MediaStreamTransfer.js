@@ -15,6 +15,7 @@ export default class MediaStreamTransfer {
       const { server, host, port } = this
       let connectTimer = setTimeout(reject, 10000)
       console.debug('connecting socket', id)
+      this.connectionId = id
       const socket = this.socket = io(`${server}/${id}` || `http://${host}:${port}/${id}`)
       socket.on('connect', () => {
         this.isConnected = true
@@ -24,6 +25,17 @@ export default class MediaStreamTransfer {
         resolve()
       })
     })
+  }
+
+  disconnect() {
+    this.socket.emit('disconnect')
+    this.socket.disconnect()
+  }
+
+  send(message) {
+    if (this.isConnected) {
+      this.socket.emit(message)
+    }
   }
 
   upload(blob) {

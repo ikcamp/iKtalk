@@ -88,6 +88,7 @@ class Socket {
              * 当用户断开socket连接的时候，修改直播频道状态
              */
             socket.on('disconnect', () => {
+                console.log('disconnect')
                 let channel = C.getOne(this.id)
                 if (!socket.user.id === channel.owner) {
                     return

@@ -87,10 +87,9 @@ class HostRoomContainer extends Component {
       },
     }, stream => {
       this.setState({
-        _loading_: true,
         cameraIndex: newCameraIndex,
         stream: window.URL.createObjectURL(stream)
-      }, ()=>this.setState({ _loading_: false }))
+      })
     })
   }
 
@@ -248,7 +247,13 @@ class HostRoomContainer extends Component {
    * @memberof HostRoomContainer
    */
   handleLiveOver = () => {
-    this.mediaRecorder && this.mediaRecorder.stop()
+    if(this.mediaRecorder) {
+      this.mediaRecorder.ondataavailable = ()=>{}
+      this.mediaRecorder.stop()
+    }
+    if (this.mediaStreamTransfer) {
+      this.mediaStreamTransfer.disconnect()
+    }
     const { user, history } = this.props
     // if (this.state.status !== HostRoomContainer.LIVE_STATUS.SOCKET_CONNECTED) return
     fetch(`/channel/${user.id}/end`)
