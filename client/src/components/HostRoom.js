@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import { Link } from 'react-router-dom'
 import Toast from './Toast'
 // import BarrageInput from './BarrageInput'
 import BarrageList from './BarrageList'
@@ -61,14 +62,6 @@ export default class HostRoom extends Component {
     }
   }
 
-  componentWillReceiveProps(nextProps) {
-    if(this.props.stream && nextProps.stream !== this.props.stream) {
-      this.setState({
-        _loading_: true
-      }, ()=>this.setState({ _loading_: false }))
-    }
-  }
-
   componentDidMount() {
     this.hideTimer = setTimeout(()=>{
       this.setState({ controlPanelVisible: false })
@@ -82,7 +75,6 @@ export default class HostRoom extends Component {
     }, ()=>{
       this.hideTimer = setTimeout(()=>{
         this.setState({ controlPanelVisible: false })
-        this.showToast('触碰屏幕显示菜单')
       }, 3000)
     })
 
@@ -99,13 +91,13 @@ export default class HostRoom extends Component {
 
   render() {
     const { handleTouch } = this
-    const { _loading_, controlPanelVisible } = this.state
+    const { controlPanelVisible } = this.state
     const { stream, cameras = [], onExitRoom, onToggleCamera } = this.props
     return (
       <div style={styles.room} onClick={handleTouch}>
-        { !_loading_ && <video src={stream} autoPlay style={styles.video}></video> }
+        <video src={stream} autoPlay style={styles.video}></video>
         <div style={{ ...styles.controlPanel, visibility: controlPanelVisible ? 'visible' : 'hidden' }}>
-          <a onClick={onExitRoom} style={styles.backBtn}></a>
+          <Link to="/" style={styles.backBtn}/>
           { cameras.length >= 2 && <a onClick={onToggleCamera} style={styles.toggleCameraBtn}></a> }
         </div>
         <Toast duration={2000} ref="toast" />

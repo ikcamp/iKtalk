@@ -1,18 +1,33 @@
 import React, { Component } from 'react'
 import ReactDOM from 'react-dom'
+import { Link } from 'react-router-dom'
 import Toast from './Toast'
+import BarrageInput from './BarrageInput'
 import Hls from 'hls.js'
+<<<<<<< HEAD
 import BarrageList from './BarrageList'
 import BarrageInput from './BarrageInput'
+=======
+import { VISITOR_ROOM_ERROR_STATUS, VISITOR_ROOM_ERROR_MESSAGE } from '../consts'
+>>>>>>> fa4226467d519e8333f7a4677e96cd190707df3a
 
 const videoSrc = require('../containers/3.mp4')
 const CLIENT_WIDTH = document.documentElement.clientWidth
 const CLIENT_HEIGHT = document.documentElement.clientHeight
+const { NOT_FOUND } = VISITOR_ROOM_ERROR_STATUS
 
 const styles = {
   room: {
     width: `${CLIENT_WIDTH}px`,
     height: `${CLIENT_HEIGHT}px`
+  },
+  roomError: {
+    width: `${CLIENT_WIDTH}px`,
+    height: `${CLIENT_HEIGHT}px`,
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    flexDirection: 'column'
   },
   video: {
     objectFit: 'cover',
@@ -56,7 +71,23 @@ const styles = {
   }
 }
 
-export default class MyRoom extends Component {
+const RoomError = ({ status, goBack }) => {
+  return (
+    <div style={styles.roomError}>
+      <div>{VISITOR_ROOM_ERROR_MESSAGE[status]}</div>
+      <Link style={{ marginTop: '100px' }} to="/" >返回</Link>
+    </div>
+  )
+}
+
+export default class VisitorRoom extends Component {
+
+  static STATUS = {
+    CONNECTING: 0,
+    LIVING: 1,
+    NOT_FOUND: -1,
+    LIVE_OVER: -2,
+  }
 
   constructor(props) {
     super(props)
@@ -68,11 +99,11 @@ export default class MyRoom extends Component {
   componentDidMount() {
     const { playUrl } = this.props
     this.hideTimer = setTimeout(()=>{
-      this.setState({ controlPanelVisible: false })
+      this.setState({ controlPanelVisible: true })
     }, 3000)
     let video = this.video = ReactDOM.findDOMNode(this.refs.video)
     playUrl && this.loadSource(playUrl)
-    this.showToast('连接中...', 99999)
+    this.showToast('努力连接中...', 99999)
   }
 
   componentWillReceiveProps(nextProps) {
@@ -105,8 +136,7 @@ export default class MyRoom extends Component {
       controlPanelVisible: true
     }, ()=>{
       this.hideTimer = setTimeout(()=>{
-        this.setState({ controlPanelVisible: false })
-        this.showToast('触碰屏幕显示菜单')
+        this.setState({ controlPanelVisible: true })
       }, 3000)
     })
 
@@ -117,19 +147,33 @@ export default class MyRoom extends Component {
     clearTimeout(this.hideTimer)
   }
 
-  showToast = (message) => {
-    this.refs.toast && this.refs.toast.show(message)
+  showToast = (message, duration) => {
+    this.refs.toast && this.refs.toast.show(message, duration)
+  }
+
+  renderError({ status }) {
+    if(status === NOT_FOUND) {
+      return (
+        <div style={styles.roomError}>
+          您要找的房间好像不存在哦
+        </div>
+      )
+    }
   }
 
   render() {
-    const { handleTouch } = this
+    const { handleTouch, renderError } = this
     const { controlPanelVisible } = this.state
-    const { onExitRoom, stream,  showToast } = this.props
+    const { user, onExitRoom, stream,  showToast, roomStatus, roomError } = this.props
+
+    if (roomError) return <RoomError {...roomError} goBack={onExitRoom} />
+
     return (
       <div style={styles.room} onClick={handleTouch}>
         <video src={videoSrc} autoPlay style={styles.video} ref="video"></video>
-         <div style={{ ...styles.controlPanel, visibility: controlPanelVisible ? 'visible' : 'hidden' }}>
-          <a onClick={onExitRoom} style={styles.backBtn}></a>
+        <div style={{ ...styles.controlPanel, visibility: controlPanelVisible ? 'visible' : 'hidden' }}>
+          <Link to="/" style={styles.backBtn}/>
+          <BarrageInput user={user}/>
         </div>
         <Toast duration={2000} ref="toast" />
         <BarrageList user={this.props.match.params}/>
