@@ -24,6 +24,7 @@ const C = {
         item.ready = false
         item.onlines = 0
         item.videos = []
+        item.createTime = new Date()
         channels.push(item)
     },
     done(id) {
