@@ -1,6 +1,6 @@
+import config from '../config'
+import io from 'socket.io-client'
 import React, { Component } from 'react'
-import ReactDOM from 'react-dom';
-import MakeSocket from '../lib/MakeSocket'
 import BarrageList from './BarrageList'
 import BarrageInput from './BarrageInput'
 
@@ -9,8 +9,8 @@ export default class Barrage extends Component {
       super(props)
       if(this.props.channel){
         let cid = this.props.channel.id
-        let instanceSocket = this.socket = new MakeSocket(cid)
-        instanceSocket.socket.on('new message', (data)=>{
+        this.socket = io(`${config.httpServer}/${cid}`)
+        this.socket.on('new message', (data)=>{
           this.addBarrage(data);
         });
       }
@@ -21,7 +21,7 @@ export default class Barrage extends Component {
       this.setState({barrages: newBarrage});
     }
     sendBarrage(barrage) {
-      this.socket && this.socket.sendBarrage(barrage)
+      this.socket && this.socket.emit('new message', barrage);
     }
     render() {
       return (
