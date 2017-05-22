@@ -7,7 +7,6 @@ import BarrageList from './BarrageList'
 import BarrageInput from './BarrageInput'
 import { VISITOR_ROOM_ERROR_STATUS, VISITOR_ROOM_ERROR_MESSAGE } from '../consts'
 
-const videoSrc = require('../containers/3.mp4')
 const CLIENT_WIDTH = document.documentElement.clientWidth
 const CLIENT_HEIGHT = document.documentElement.clientHeight
 const { NOT_FOUND } = VISITOR_ROOM_ERROR_STATUS
@@ -52,16 +51,55 @@ const styles = {
     left: '15px',
     cursor: 'pointer'
   },
-  toggleCameraBtn: {
+  fullScreen: {
     display: 'inline-block',
-    width: '31px',
-    height: '26px',
+    width: '22px',
+    height: '22px',
     backgroundSize: '100% auto',
     backgroundRepeat: 'no-repeat',
     backgroundPosition: 'center center',
-    backgroundImage: `url(${require('./images/toggle-camera@2x.png')})`,
+    backgroundImage: `url(${require('./images/full-screen.png')})`,
     position: 'absolute',
     top: '15px',
+    right: '15px',
+    cursor: 'pointer'
+  },
+  fullScreenExit: {
+    display: 'inline-block',
+    width: '22px',
+    height: '22px',
+    backgroundSize: '100% auto',
+    backgroundRepeat: 'no-repeat',
+    backgroundPosition: 'center center',
+    backgroundImage: `url(${require('./images/full-screen-exit.png')})`,
+    position: 'absolute',
+    top: '15px',
+    right: '15px',
+    cursor: 'pointer'
+  },
+  volNormal: {
+    display: 'inline-block',
+    width: '24px',
+    height: '24px',
+    backgroundSize: '100% auto',
+    backgroundRepeat: 'no-repeat',
+    backgroundPosition: 'center center',
+    backgroundImage: `url(${require('./images/vol-normal.png')})`,
+    position: 'absolute',
+    top: '50px',
+    right: '15px',
+    cursor: 'pointer'
+  },
+  volMute: {
+    display: 'inline-block',
+    width: '24px',
+    height: '24px',
+    backgroundSize: '100% auto',
+    backgroundRepeat: 'no-repeat',
+    backgroundPosition: 'center center',
+    backgroundImage: `url(${require('./images/vol-mute.png')})`,
+    position: 'absolute',
+    top: '50px',
     right: '15px',
     cursor: 'pointer'
   }
@@ -88,7 +126,8 @@ export default class VisitorRoom extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      controlPanelVisible: true
+      controlPanelVisible: true,
+      isFullScreen: false
     }
   }
 
@@ -100,6 +139,25 @@ export default class VisitorRoom extends Component {
     let video = this.video = ReactDOM.findDOMNode(this.refs.video)
     playUrl && this.loadSource(playUrl)
     this.showToast('努力连接中...', 99999)
+    this.initEventListeners(video)
+  }
+
+  initEventListeners = (video) => {
+    video.addEventListener('webkitfullscreenchange', this.onFullScreenChange)
+    video.addEventListener('volumechange', this.onVolumeChange)
+  }
+
+  removeEventListeners = (video) => {
+    video.removeEventListener('webkitfullscreenchange', this.onFullScreenChange)
+    video.removeEventListener('volumechange', this.onVolumeChange)
+  }
+
+  onFullScreenChange = () => {
+    this.setState({ isFullScreen: !this.state.isFullScreen })
+  }
+
+  onVolumeChange = () => {
+    this.setState({ isMuted: !this.state.isMuted })
   }
 
   componentWillReceiveProps(nextProps) {
@@ -126,6 +184,11 @@ export default class VisitorRoom extends Component {
     this.showToast('连接成功', 2000)
   }
 
+  componentWillUnmount() {
+    this.unmounted = true
+    clearTimeout(this.hideTimer)
+  }
+
   handleTouch = () => {
     this.hideTimer && clearTimeout(this.hideTimer)
     this.setState({
@@ -138,9 +201,17 @@ export default class VisitorRoom extends Component {
 
   }
 
-  componentWillUnmount() {
-    this.unmounted = true
-    clearTimeout(this.hideTimer)
+  toggleFullScreen = () => {
+    let isFullScreen = this.state.isFullScreen
+    if (isFullScreen) {
+      this.video && this.video.exitFullscreen()
+    } else {
+      this.video && this.video.webkitRequestFullScreen()
+    }
+  }
+
+  toggleMute = () => {
+    this.video.volume = this.video.volume ? 0 : 1
   }
 
   showToast = (message, duration) => {
@@ -158,17 +229,22 @@ export default class VisitorRoom extends Component {
   }
 
   render() {
-    const { handleTouch, renderError } = this
-    const { controlPanelVisible } = this.state
-    const { user, onExitRoom, stream,  showToast, roomStatus, roomError } = this.props
+    const { showToast, handleTouch, toggleFullScreen, toggleMute } = this
+    const { controlPanelVisible, isFullScreen, isMuted } = this.state
+    const {
+      user, stream, roomStatus, roomError,
+      isMute = false,
+    } = this.props
 
     if (roomError) return <RoomError {...roomError} goBack={onExitRoom} />
 
     return (
       <div style={styles.room} onClick={handleTouch}>
-        <video src={videoSrc} autoPlay style={styles.video} ref="video"></video>
+        <video autoPlay style={styles.video} ref="video"></video>
         <div style={{ ...styles.controlPanel, visibility: controlPanelVisible ? 'visible' : 'hidden' }}>
           <Link to="/" style={styles.backBtn}/>
+          <a onClick={toggleFullScreen} style={isFullScreen ? styles.fullScreenExit : styles.fullScreen}></a>
+          <a onClick={toggleMute} style={isMuted ? styles.volMute : styles.volNormal}></a>
         </div>
         <Toast duration={2000} ref="toast" />
         <BarrageList user={this.props.match.params}/>

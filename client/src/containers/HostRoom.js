@@ -11,22 +11,6 @@ const { httpServer, httpsServer, httpsHost, httpsPort } = config
 const CLIENT_WIDTH = document.documentElement.clientWidth
 const CLIENT_HEIGHT = document.documentElement.clientHeight
 
-const mediaConstraints = {
-  audio: false,
-  video: {
-    width: CLIENT_WIDTH,
-    height: CLIENT_HEIGHT,
-    frameRate: 30,
-    // facingMode: { exact: 'environment' }
-    // facingMode: 'user',
-    // mandatory: {
-    //   minWidth: CLIENT_WIDTH,
-    //   minHeight: CLIENT_HEIGHT,
-    //   minFrameRate: 30
-    // }
-  }
-}
-
 class HostRoomContainer extends Component {
 
   static LIVE_STATUS = {
@@ -40,7 +24,15 @@ class HostRoomContainer extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      status: HostRoomContainer.LIVE_STATUS.IDLE
+      status: HostRoomContainer.LIVE_STATUS.IDLE,
+      mediaConstraints: {
+        audio: true,
+        video: {
+          width: CLIENT_WIDTH,
+          height: CLIENT_HEIGHT,
+          frameRate: 30
+        }
+      }
     }
   }
 
@@ -76,6 +68,7 @@ class HostRoomContainer extends Component {
     if (this.mediaRecorder) {
       this.mediaRecorder.stop()
     }
+    const mediaConstraints = this.state.mediaConstraints
     const { cameras, cameraIndex } = this.state
     let newCameraIndex = cameraIndex ? 0 : 1
     let newCamera = cameras[newCameraIndex]
@@ -93,6 +86,31 @@ class HostRoomContainer extends Component {
     })
   }
 
+  /**
+   * 切换音频
+   * 
+   * 
+   * @memberof HostRoomContainer
+   */
+  toggleAudio = () => {
+    if (this.mediaRecorder) {
+      this.mediaRecorder.stop()
+    }
+    const mediaConstraints = this.state.mediaConstraints
+    this.getLocalStream({
+      ...mediaConstraints,
+      audio: !mediaConstraints.audio
+    }, stream => {
+      this.setState({
+        mediaConstraints: {
+          ...mediaConstraints,
+          audio: !mediaConstraints.audio
+        },
+        stream: window.URL.createObjectURL(stream)
+      })
+    })
+  }
+
 
   /**
    * 初始化媒体设备
@@ -102,7 +120,7 @@ class HostRoomContainer extends Component {
    */
   initMedias() {
     this.getCameras()
-    this.getLocalStream(mediaConstraints, stream => {
+    this.getLocalStream(this.state.mediaConstraints, stream => {
       this.setState({
         cameraIndex: 0,
         stream: window.URL.createObjectURL(stream)
@@ -255,15 +273,11 @@ class HostRoomContainer extends Component {
       this.mediaStreamTransfer.disconnect()
     }
     const { user, history } = this.props
-    // if (this.state.status !== HostRoomContainer.LIVE_STATUS.SOCKET_CONNECTED) return
     fetch(`/channel/${user.id}/end`)
     .then(res=>res.json())
     .then(({ status }) => {
-      if (status === 0) {
-        // this.setState({ status: HostRoomContainer.LIVE_STATUS.END })
-        // history.goBack(-1)
-      } else {
-        window.alert('结束直播异常')
+      if (status !== 0) {
+        console.debug('结束直播异常')
       }
     })
   }
@@ -280,12 +294,15 @@ class HostRoomContainer extends Component {
   }
 
   render() {
-    const { toggleCamera, handleExit } = this
+    const { toggleCamera, toggleAudio, handleExit } = this
+    const { mediaConstraints } = this.state
     return (
       <HostRoom
         {...this.props}
         {...this.state}
+        isMuted={!mediaConstraints.audio}
         onToggleCamera={toggleCamera}
+        onToggleMute={toggleAudio}
         onExitRoom={handleExit}
       />
     )
