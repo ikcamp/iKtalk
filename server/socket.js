@@ -21,6 +21,7 @@ class Socket {
         this.id = id
         this.ns = instance.of(`/${id}`)
         if(this.ns.init){
+            C.ready(this.id)
             return
         }
         this.ns.init = true
