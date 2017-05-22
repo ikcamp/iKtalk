@@ -86,6 +86,9 @@ class Socket {
              */
             socket.on('disconnect', () => {
                 let channel = C.getOne(this.id)
+                if(!socket.user){
+                    return
+                }
                 if (!socket.user.id === channel.owner) {
                     return
                 }
