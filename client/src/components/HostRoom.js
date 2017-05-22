@@ -50,6 +50,32 @@ const styles = {
     top: '15px',
     right: '15px',
     cursor: 'pointer'
+  },
+  volNormal: {
+    display: 'inline-block',
+    width: '24px',
+    height: '24px',
+    backgroundSize: '100% auto',
+    backgroundRepeat: 'no-repeat',
+    backgroundPosition: 'center center',
+    backgroundImage: `url(${require('./images/vol-normal.png')})`,
+    position: 'absolute',
+    top: '50px',
+    right: '15px',
+    cursor: 'pointer'
+  },
+  volMute: {
+    display: 'inline-block',
+    width: '24px',
+    height: '24px',
+    backgroundSize: '100% auto',
+    backgroundRepeat: 'no-repeat',
+    backgroundPosition: 'center center',
+    backgroundImage: `url(${require('./images/vol-mute.png')})`,
+    position: 'absolute',
+    top: '50px',
+    right: '15px',
+    cursor: 'pointer'
   }
 }
 
@@ -92,13 +118,14 @@ export default class HostRoom extends Component {
   render() {
     const { handleTouch } = this
     const { controlPanelVisible } = this.state
-    const { user, stream, cameras = [], onExitRoom, onToggleCamera } = this.props
+    const { user, stream, cameras = [], isMuted, onExitRoom, onToggleMute, onToggleCamera } = this.props
     return (
       <div style={styles.room} onClick={handleTouch}>
         <video src={stream} autoPlay style={styles.video}></video>
         <div style={{ ...styles.controlPanel, visibility: controlPanelVisible ? 'visible' : 'hidden' }}>
           <Link to="/" style={styles.backBtn}/>
           { cameras.length >= 2 && <a onClick={onToggleCamera} style={styles.toggleCameraBtn}></a> }
+          <a onClick={onToggleMute} style={isMuted ? styles.volMute : styles.volNormal}></a>
         </div>
         <Toast duration={2000} ref="toast" />
         <BarrageList user={this.props.user} channel={this.props.user}/>

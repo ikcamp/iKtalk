@@ -104,9 +104,8 @@ class Channel extends Base {
     playList() {
         this.routes.get('/:id/playlist', (context, next) => {
             let id = context.params.id
-            let s = socket.getSocket(id)
             context.set('Content-Type', 'application/x-mpegURL')
-            context.body = s.getM3U()
+            context.body = channel.getM3U(id)
         })
     }
 }

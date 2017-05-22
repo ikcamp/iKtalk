@@ -14,7 +14,6 @@ const C = require('./model/channel')
 let server
 let instance
 
-const sockets = {}
 const MAX_VIDEO_FILES = 2
 
 class Socket {
@@ -74,6 +73,14 @@ class Socket {
                     })
             })
 
+            const online = () => {
+                this.ns.clients((err, cs) => {
+                    this.ns.emit("online", cs.length)
+                })
+            }
+
+            online()
+
             /**
              * 弹幕，接收客户端的message，然后直接广播出去
              */
@@ -87,8 +94,11 @@ class Socket {
              * 当用户断开socket连接的时候，修改直播频道状态
              */
             socket.on('disconnect', () => {
-                console.log('disconnect')
+                online()
                 let channel = C.getOne(this.id)
+                if (!socket.user) {
+                    return
+                }
                 if (!socket.user.id === channel.owner) {
                     return
                 }
@@ -104,33 +114,15 @@ class Socket {
                         }
                     })
                 })
-                this._remove()
             })
         })
-    }
-
-    _remove() {
-        let id = this.id
-        delete sockets[id]
     }
 
     /**
      * 添加视频片段。服务器端只保留最新的`MAX_VIDEO_FILES`个的文件。
      */
     addVideo(video, duration) {
-        if (this.videos.length >= MAX_VIDEO_FILES) {
-            let file = path.resolve(__dirname, `.${this.videos[0].video}`)
-            fs.unlink(file, (err, data) => {
-                if (err) {
-                    debug(err)
-                } else {
-                    debug(`remove file ${file}`)
-                }
-            })
-            this.videos.splice(0, 1)
-
-        }
-        this.videos.push({
+        C.addVideo(this.id, {
             sequence: this.sequence,
             video,
             duration
@@ -168,17 +160,11 @@ const initIO = (server, httpsServer) => {
     }
 }
 
-const getSocket = (id) => {
-    return sockets[id]
-}
-
 const create = (id) => {
     let s = new Socket(id)
-    sockets[id] = s
 }
 
 module.exports = {
     initIO,
-    getSocket,
     create
 }

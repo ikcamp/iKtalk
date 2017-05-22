@@ -8,7 +8,7 @@ import { VISITOR_ROOM_ERROR_STATUS } from '../consts'
 
 const { httpServer, httpsServer, httpsHost, httpsPort } = config
 
-class RoomContainer extends Component {
+class VisitorRoomContainer extends Component {
 
   componentDidMount() {
     const { match } = this.props
@@ -69,4 +69,4 @@ class RoomContainer extends Component {
 
 export default connect(state=>({
   user: state.user
-}))(RoomContainer)
+}))(VisitorRoomContainer)
