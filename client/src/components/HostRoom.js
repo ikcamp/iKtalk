@@ -128,8 +128,8 @@ export default class HostRoom extends Component {
           <a onClick={onToggleMute} style={isMuted ? styles.volMute : styles.volNormal}></a>
         </div>
         <Toast duration={2000} ref="toast" />
-        <BarrageList user={this.props.user} channel={this.props.user}/>
-        <BarrageInput user={this.props.user} channel={this.props.user} />
+        <BarrageList channel={this.props.user}/>
+        <BarrageInput channel={this.props.user} />
       </div>
     )
   }

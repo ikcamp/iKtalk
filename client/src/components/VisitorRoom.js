@@ -247,8 +247,8 @@ export default class VisitorRoom extends Component {
           <a onClick={toggleMute} style={isMuted ? styles.volMute : styles.volNormal}></a>
         </div>
         <Toast duration={2000} ref="toast" />
-        <BarrageList channel={this.props.match.params} user={user}/>
-        <BarrageInput channel={this.props.match.params} user={user}/>
+        <BarrageList channel={this.props.match.params} />
+        <BarrageInput channel={this.props.match.params} />
       </div>
     )
   }
