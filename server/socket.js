@@ -74,7 +74,7 @@ class Socket {
             })
 
             const online = () => {
-                this.ns.clients(cs => {
+                this.ns.clients((err, cs) => {
                     this.ns.emit("online", cs.length)
                 })
             }
