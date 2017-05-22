@@ -3,8 +3,7 @@ import ReactDOM from 'react-dom'
 import { Link } from 'react-router-dom'
 import Toast from './Toast'
 import Hls from 'hls.js'
-import BarrageList from './BarrageList'
-import BarrageInput from './BarrageInput'
+import Barrage from './Barrage'
 import { VISITOR_ROOM_ERROR_STATUS, VISITOR_ROOM_ERROR_MESSAGE } from '../consts'
 
 const CLIENT_WIDTH = document.documentElement.clientWidth
@@ -247,8 +246,7 @@ export default class VisitorRoom extends Component {
           <a onClick={toggleMute} style={isMuted ? styles.volMute : styles.volNormal}></a>
         </div>
         <Toast duration={2000} ref="toast" />
-        <BarrageList channel={this.props.match.params} />
-        <BarrageInput channel={this.props.match.params} />
+        <Barrage channel={this.props.match.params}/>
       </div>
     )
   }

@@ -1,17 +1,13 @@
 import React, { Component } from 'react'
 import ReactDOM from 'react-dom';
-import MakeSocket from '../lib/MakeSocket'
-
 export default class BarrageInput extends Component {
     constructor(props) {
       super(props)
     }
-    sendMessage() {
-      let cid = this.props.channel.id
+    sendBarrage() {
       let barrage = ReactDOM.findDOMNode(this.refs.barrageMessage)
-      if (cid && barrage.value) {
-        let aSocket = new MakeSocket(cid)
-        aSocket.sendBarrage(barrage.value)
+      if (barrage.value) {
+        this.props.onBarrageSend(barrage.value)
         barrage.value = ''
       }
     }
@@ -19,7 +15,7 @@ export default class BarrageInput extends Component {
       return (
         <div className="barrage-input-container">
           <input type="text" className="barrage-input-text" ref="barrageMessage" placeholder="吐个槽呗"/>
-          <input type="button" value="发送弹幕" onClick={e => this.sendMessage(e)} className="barrage-input-submit"/>
+          <input type="button" value="发送弹幕" onClick={e => this.sendBarrage(e)} className="barrage-input-submit"/>
         </div>
       )
     }

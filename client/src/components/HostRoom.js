@@ -1,8 +1,7 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
 import Toast from './Toast'
-import BarrageInput from './BarrageInput'
-import BarrageList from './BarrageList'
+import Barrage from './Barrage'
 const CLIENT_WIDTH = document.documentElement.clientWidth
 const CLIENT_HEIGHT = document.documentElement.clientHeight
 
@@ -128,8 +127,7 @@ export default class HostRoom extends Component {
           <a onClick={onToggleMute} style={isMuted ? styles.volMute : styles.volNormal}></a>
         </div>
         <Toast duration={2000} ref="toast" />
-        <BarrageList channel={this.props.user}/>
-        <BarrageInput channel={this.props.user} />
+        <Barrage channel={this.props.user}/>
       </div>
     )
   }
