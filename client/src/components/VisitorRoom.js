@@ -105,7 +105,7 @@ const styles = {
   }
 }
 
-const RoomError = ({ status, goBack }) => {
+const RoomError = ({ status }) => {
   return (
     <div style={styles.roomError}>
       <div>{VISITOR_ROOM_ERROR_MESSAGE[status]}</div>
@@ -236,7 +236,7 @@ export default class VisitorRoom extends Component {
       isMute = false,
     } = this.props
 
-    if (roomError) return <RoomError {...roomError} goBack={onExitRoom} />
+    if (roomError) return <RoomError {...roomError}/>
 
     return (
       <div style={styles.room} onClick={handleTouch}>

@@ -1,6 +1,6 @@
 // @ts-check
 const uuid = require("node-uuid")
-// const channels = [
+const channels = [
 //    {
 //        id: 1,
 //        playUrl: '/channel/testuser/playlist',
@@ -68,8 +68,8 @@ const uuid = require("node-uuid")
 //        ready: false,
 //        name: '口语提高班'
 //    }
-//]
-//
+]
+
 const C = {
    get() {
        return channels.filter((item) => {
