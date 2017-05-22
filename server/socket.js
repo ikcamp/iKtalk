@@ -20,6 +20,11 @@ class Socket {
     constructor(id) {
         this.id = id
         this.ns = instance.of(`/${id}`)
+        if(this.ns.init){
+            C.ready(this.id)
+            return
+        }
+        this.ns.init = true
         this.init()
         this.videos = []
         this.sequence = 0
@@ -167,7 +172,7 @@ const initIO = (server, httpsServer) => {
     }
 }
 
-const create = (id) => {
+const create = (id) => {    
     let s = new Socket(id)
 }
 
