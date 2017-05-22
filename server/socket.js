@@ -73,20 +73,29 @@ class Socket {
                     })
             })
 
+            function online() {
+                this.ns.clients(cs => {
+                    this.ns.emit("online", cs.length)
+                })
+            }
+
+            online()
+
             /**
              * 弹幕，接收客户端的message，然后直接广播出去
              */
             socket.on('new message', (data) => {
                 socket.broadcast.emit('new message', {
-                  message: data
+                    message: data
                 })
             })
             /**
              * 当用户断开socket连接的时候，修改直播频道状态
              */
             socket.on('disconnect', () => {
+                online()
                 let channel = C.getOne(this.id)
-                if(!socket.user){
+                if (!socket.user) {
                     return
                 }
                 if (!socket.user.id === channel.owner) {
