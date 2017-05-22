@@ -28,7 +28,7 @@ class Socket {
     init() {
         this.ns.on("connection", (socket) => {
             /**
-             * socket 连接后，告知socket当前用户信息 
+             * socket 连接后，告知socket当前用户信息
              */
             socket.on("login", (data) => {
                 socket.user = data
@@ -76,8 +76,10 @@ class Socket {
             /**
              * 弹幕，接收客户端的message，然后直接广播出去
              */
-            socket.on('message', (data) => {
-                this.ns.emit('message', data)
+            socket.on('new message', (data) => {
+                socket.broadcast.emit('new message', {
+                  message: data
+                })
             })
             /**
              * 当用户断开socket连接的时候，修改直播频道状态

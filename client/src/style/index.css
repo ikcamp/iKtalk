@@ -11,93 +11,84 @@ body {
   background-color: #fff;
   margin: 0;
   padding: 0;
+  font-size: 14px;
 }
 
-input[type=color], input[type=date], input[type=datetime-local], input[type=datetime], input[type=email], input[type=month], input[type=number], input[type=password], input[type=search], input[type=tel], input[type=text], input[type=time], input[type=url], input[type=week], select, textarea {
+.barrage-input-container {
+  position: fixed;
+  bottom: 0;
   width: 100%;
-  height: 35px;
-  -webkit-appearance: none;
-  padding: 0 15px;
-  margin-bottom: 15px;
-  line-height: 21px;
-  background-color: #fff;
-  border: 1px solid #ddd;
-  border-radius: 3px;
-  outline: 0;
+  height: 30px;
+  display: flex;
+  z-index: 100;
 }
-
-button, input, select, textarea {
-  font-family: "Helvetica Neue",Helvetica,sans-serif;
-  font-size: 17px;
+.barrage-input-text {
+  flex: 8;
+  border:1px solid #d2a000;
 }
-
-input {
-  line-height: normal;
-}
-
-textarea {
-  height: auto;
-}
-
-input[type=search] {
-  -webkit-box-sizing: border-box;
-  -moz-box-sizing: border-box;
-  box-sizing: border-box;
-  padding: 0 10px;
-  font-size: 16px;
-  border-radius: 20px;
-}
-
-.btn {
-  position: relative;
-  display: inline-block;
-  padding: 6px 8px 7px;
-  margin-bottom: 0;
-  font-size: 12px;
-  font-weight: 400;
-  line-height: 1;
-  color: #333;
-  text-align: center;
-  white-space: nowrap;
-  vertical-align: top;
-  cursor: pointer;
-  background-color: #fff;
-  border: 1px solid #ccc;
-  border-radius: 3px;
-}
-
-.btn-positive {
+.barrage-input-submit {
+  flex: 2;
+  background-color: #d2a000;
   color: #fff;
-  background-color: #5cb85c;
-  border: 1px solid #5cb85c;
+  border:1px solid #d2a000;
+  box-shadow: 0 1px 2px #fedd71 inset,0 -1px 0 #a38b39 inset,0 -2px 3px #fedd71 inset;
 }
 
-.btn-block {
-  display: block;
+.barrages{
+  position: absolute;
+  top: 0;
+  left: 0;
   width: 100%;
-  padding: 15px 0;
-  margin-bottom: 10px;
-  font-size: 18px;
+  height: 100%;
+  z-index: 99;
 }
 
-button, input, select, textarea {
-  font-family: "Helvetica Neue",Helvetica,sans-serif;
-  font-size: 17px;
-}
-button, html input[type=button], input[type=reset], input[type=submit] {
-  -webkit-appearance: button;
-  cursor: pointer;
+.barrages div{
+  opacity: 0;
+  position: absolute;
 }
 
-button, select {
-  text-transform: none;
+.barrage-enter {
+  display: inline-block;
+  position: absolute;
+  opacity: 0;
+  animation: barrage 4s linear;
 }
 
-button {
-  overflow: visible;
+.barrage-enter.barrage-enter-active {
+  opacity: 1;
 }
-button, input, optgroup, select, textarea {
-  margin: 0;
-  font: inherit;
-  color: inherit;
+
+.barrage-0{
+  top: 10%;
+}
+.barrage-1{
+  top: 20%;
+}
+.barrage-2{
+  top: 30%;
+}
+.barrage-3{
+  top: 40%;
+}
+.barrage-4{
+  top: 50%;
+}
+.barrage-5{
+  top: 60%;
+}
+.barrage-6{
+  top: 70%;
+}
+.barrage-7{
+  top: 80%;
+}
+
+@keyframes barrage {
+  from {
+    left:100%;;
+  }
+  to {
+    left:-100%;
+  }
 }
