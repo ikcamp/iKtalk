@@ -118,7 +118,7 @@ export default class HostRoom extends Component {
   render() {
     const { handleTouch } = this
     const { controlPanelVisible } = this.state
-    const { stream, cameras = [], isMuted, onExitRoom, onToggleMute, onToggleCamera } = this.props
+    const { user, stream, cameras = [], isMuted, onExitRoom, onToggleMute, onToggleCamera } = this.props
     return (
       <div style={styles.room} onClick={handleTouch}>
         <video src={stream} autoPlay style={styles.video}></video>
@@ -128,8 +128,8 @@ export default class HostRoom extends Component {
           <a onClick={onToggleMute} style={isMuted ? styles.volMute : styles.volNormal}></a>
         </div>
         <Toast duration={2000} ref="toast" />
-        <BarrageList user={this.props.user} />
-        <BarrageInput user={this.props.user} />
+        <BarrageList user={this.props.user} channel={this.props.user}/>
+        <BarrageInput user={this.props.user} channel={this.props.user} />
       </div>
     )
   }
