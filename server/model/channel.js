@@ -22,6 +22,7 @@ const C = {
         item.playUrl = `/channel/${id}/playlist`
         item.done = false
         item.ready = false
+        item.onlines = 0
         item.videos = []
         channels.push(item)
     },

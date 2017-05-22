@@ -75,7 +75,9 @@ class Socket {
 
             const online = () => {
                 this.ns.clients((err, cs) => {
-                    this.ns.emit("online", cs.length)
+                    let onlines = cs.length
+                    this.ns.emit("online", onlines)
+                    C.getOne(this.id).onlines = onlines
                 })
             }
 
