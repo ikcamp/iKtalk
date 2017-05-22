@@ -4,6 +4,12 @@ export default class BarrageInput extends Component {
     constructor(props) {
       super(props)
     }
+    componentDidMount() {
+      let barrage = ReactDOM.findDOMNode(this.refs.barrageMessage)
+      barrage.addEventListener('keydown', (e)=>{
+        if (e.keyCode === 13) this.sendBarrage()
+      }, false)
+    }
     sendBarrage() {
       let barrage = ReactDOM.findDOMNode(this.refs.barrageMessage)
       if (barrage.value) {
@@ -14,7 +20,7 @@ export default class BarrageInput extends Component {
     render() {
       return (
         <div className="barrage-input-container">
-          <input type="text" className="barrage-input-text" ref="barrageMessage" placeholder="吐个槽呗"/>
+          <input type="text" className="barrage-input-text" ref="barrageMessage" placeholder="吐个槽呗" maxLength="10"/>
           <input type="button" value="发送弹幕" onClick={e => this.sendBarrage(e)} className="barrage-input-submit"/>
         </div>
       )

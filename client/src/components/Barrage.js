@@ -9,8 +9,8 @@ export default class Barrage extends Component {
       super(props)
       if(this.props.channel){
         let cid = this.props.channel.id
-        let aSocket = this.socket = new MakeSocket(cid)
-        aSocket.socket.on('new message', (data)=>{
+        let instanceSocket = this.socket = new MakeSocket(cid)
+        instanceSocket.socket.on('new message', (data)=>{
           this.addBarrage(data);
         });
       }

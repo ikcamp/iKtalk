@@ -53,6 +53,13 @@ body {
   position: absolute;
   opacity: 0;
   animation: barrage 4s linear;
+  background-color: rgba(255, 255, 255, 0.5);
+  border: 1px solide #ff0000;
+  padding: 5px 10px;
+  border-radius: 5px;
+  height: 25px;
+  line-height: 25px;
+  overflow: hidden;
 }
 
 .barrage-enter.barrage-enter-active {
