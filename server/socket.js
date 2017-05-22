@@ -73,7 +73,7 @@ class Socket {
                     })
             })
 
-            function online() {
+            const online = () => {
                 this.ns.clients(cs => {
                     this.ns.emit("online", cs.length)
                 })
