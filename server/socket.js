@@ -78,7 +78,8 @@ class Socket {
              * 弹幕，接收客户端的message，然后直接广播出去
              */
             socket.on('new message', (data) => {
-                socket.broadcast.emit('new message', {
+                console.log(data, this.id, 'barrage')
+                this.ns.emit('new message', {
                   message: data
                 })
             })

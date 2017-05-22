@@ -9,21 +9,26 @@ export default class BarrageList extends Component {
       this.addBarrage = this.addBarrage.bind(this)
     }
     componentWillReceiveProps(nextProps) {
-      // if (!this.props.user && nextProps.user) {
-      //   let uid = nextProps.user.id
-      //   let aSocket = new MakeSocket(uid)
-      //   aSocket.socket.on('new message', (data)=>{
-      //     console.log(data)
-      //   })
-      // }
+      if (!this.props.channel && nextProps.channel) {
+        let cid = nextProps.channel
+        console.log(cid, 'aaaaaaaaaaa')
+        let aSocket = new MakeSocket(cid)
+        console.log(aSocket, "bbbbbbb")
+
+        aSocket.socket.on('new message', (data)=>{
+          console.log(data, 'ccccc');
+          this.addBarrage(data);
+        });
+      }
     }
     componentDidMount() {
-      if(this.props.user){
-        let uid = this.props.user.id
-        let aSocket = new MakeSocket(uid)
+      if(this.props.channel){
+        console.log("1111111")
+        let cid = this.props.channel.id
+        let aSocket = new MakeSocket(cid)
         aSocket.socket.on('new message', (data)=>{
-          this.addBarrage(data)
-        })
+          this.addBarrage(data);
+        });
       }
     }
     addBarrage(item) {
@@ -40,7 +45,8 @@ export default class BarrageList extends Component {
         <div className="barrages">
           <ReactCSSTransitionGroup
             transitionName="barrage"
-            transitionEnterTimeout={4000}>
+            transitionEnterTimeout={4000}
+            transitionLeave={false}>
             {barrages}
           </ReactCSSTransitionGroup>
         </div>

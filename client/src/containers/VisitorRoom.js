@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import { connect } from 'react-redux'
 import Room from '../components/VisitorRoom'
 import Hls from 'hls.js'
 import fetch from '../fetch'
@@ -47,7 +48,7 @@ class RoomContainer extends Component {
 
   /**
    * 后退
-   * 
+   *
    * @memberof MyRoomContainer
    */
   handleExit = () => {
@@ -66,4 +67,6 @@ class RoomContainer extends Component {
   }
 }
 
-export default RoomContainer
+export default connect(state=>({
+  user: state.user
+}))(RoomContainer)
