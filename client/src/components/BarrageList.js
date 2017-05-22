@@ -9,19 +9,21 @@ export default class BarrageList extends Component {
       this.addBarrage = this.addBarrage.bind(this)
     }
     componentWillReceiveProps(nextProps) {
-      if (!this.props.channel && nextProps.channel) {
-        let cid = nextProps.channel
-        console.log(cid, 'aaaaaaaaaaa')
-        let aSocket = new MakeSocket(cid)
-        console.log(aSocket, "bbbbbbb")
-
-        aSocket.socket.on('new message', (data)=>{
-          console.log(data, 'ccccc');
-          this.addBarrage(data);
-        });
-      }
+      // if (!this.props.channel && nextProps.channel) {
+      //   let cid = nextProps.channel
+      //   console.log(cid, 'aaaaaaaaaaa')
+      //   let aSocket = new MakeSocket(cid)
+      //   console.log(aSocket, "bbbbbbb")
+      //
+      //   console.log(aSocket.socket)
+      //   aSocket.socket.on('new message', (data)=>{
+      //     console.log(data, 'ccccc');
+      //     this.addBarrage(data);
+      //   });
+      // }
     }
     componentDidMount() {
+      console.log(this.props.channel, "componentDidMount")
       if(this.props.channel){
         console.log("1111111")
         let cid = this.props.channel.id
