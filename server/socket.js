@@ -36,46 +36,53 @@ class Socket {
             /**
              * 上传视频片段
              */
-            ioStream(socket).on("upload", (stream) => {
-                let filename = `${this.id}-${this.sequence}.ts`
-                let filePath = path.resolve(__dirname, `./uploads/${filename}`)
-                /**
-                 * 采用ffmpeg转webm格式为mpeg-ts片断
-                 * 手动设置视频片段的offset
-                 */
-                ffmpeg(stream).videoCodec('libx264').audioCodec('aac').addOption('-mpegts_copyts', 1).addOption('-strict', -2).format('mpegts').addOutputOption('-output_ts_offset', this.duration)
-                    .on('error', (err) => {
-                        debug('an error happened: ' + err.message);
-                        /**
-                         * 保存视频片段到磁盘
-                         */
-                    }).save(filePath).on('end', () => {
-                        debug('saved')
-                        /**
-                         * 获取媒体信息
-                         */
-                        ffmpeg.ffprobe(filePath, (err, data) => {
-                            if (err) {
-                                debug(err)
-                            }
+            try {
+                //主播关闭窗口时，会触发流读写错误
+                ioStream(socket).on("upload", (stream) => {
+                    let filename = `${this.id}-${this.sequence}.ts`
+                    let filePath = path.resolve(__dirname, `./uploads/${filename}`)
+                    /**
+                     * 采用ffmpeg转webm格式为mpeg-ts片断
+                     * 手动设置视频片段的offset
+                     */
+                    ffmpeg(stream).videoCodec('libx264').audioCodec('aac').addOption('-mpegts_copyts', 1).addOption('-strict', -2).format('mpegts').addOutputOption('-output_ts_offset', this.duration)
+                        .on('error', (err) => {
+                            debug('an error happened: ' + err.message);
                             /**
-                             * 为了计算下一片段的起始时间
+                             * 保存视频片段到磁盘
                              */
-                            this.duration += data.format.duration
-                            this.addVideo(`/uploads/${filename}`, data.format.duration)
-                            this.sequence++
-                            if (this.sequence === MAX_VIDEO_FILES) {
-                                C.ready(this.id)
-                                // 刚开始直播的时候，由于服务器端还为处理完第一片视频，客户端是无法播放的。直邮等待服务器端处理好了视频之后才能播放
-                                socket.emit("videoReady")
-                            }
+                        }).save(filePath).on('end', () => {
+                            debug('saved')
+                            /**
+                             * 获取媒体信息
+                             */
+                            ffmpeg.ffprobe(filePath, (err, data) => {
+                                if (err) {
+                                    debug(err)
+                                }
+                                /**
+                                 * 为了计算下一片段的起始时间
+                                 */
+                                this.duration += data.format.duration
+                                this.addVideo(`/uploads/${filename}`, data.format.duration)
+                                this.sequence++
+                                if (this.sequence === MAX_VIDEO_FILES) {
+                                    C.ready(this.id)
+                                    // 刚开始直播的时候，由于服务器端还为处理完第一片视频，客户端是无法播放的。直邮等待服务器端处理好了视频之后才能播放
+                                    socket.emit("videoReady")
+                                }
+                            })
                         })
-                    })
-            })
+                })
+            } catch (error) {
+
+            }
 
             const online = () => {
                 this.ns.clients((err, cs) => {
-                    this.ns.emit("online", cs.length)
+                    let onlines = cs.length
+                    this.ns.emit("online", onlines)
+                    C.getOne(this.id).onlines = onlines
                 })
             }
 
@@ -87,7 +94,7 @@ class Socket {
             socket.on('new message', (data) => {
                 console.log(data, this.id, 'barrage')
                 this.ns.emit('new message', {
-                  message: data
+                    message: data
                 })
             })
             /**
