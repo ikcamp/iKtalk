@@ -35,6 +35,7 @@ const C = {
     ready(id) {
         let item = C.getOne(id)
         if (item) {
+            item.done = false
             item.ready = true
         }
     },
