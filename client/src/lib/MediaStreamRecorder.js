@@ -46,11 +46,11 @@ export default class MediaStreamRecorder {
     if (event.data && event.data.size > 0) {
       // 将数据追加到录制记录中
       this.recordedBlobs.push(event.data)
-      this.onDataAvailable(event.data)
+      this.ondataavailable(event.data)
     }
   }
 
-  onDataAvailable(data) {}
+  ondataavailable(data) {}
 
   // 开始录制
   start(interval = 3000) {

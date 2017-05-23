@@ -171,7 +171,6 @@ class HostRoomContainer extends Component {
           height: CLIENT_HEIGHT
         }
         mediaRecorder.ondataavailable = (blob) => {
-        // mediaRecorder.onDataAvailable = (blob) => {
           if (this.state.status === LIVE_STATUS.SOCKET_CONNECTED) {
             this.setState({ status: LIVE_STATUS.LIVING })
           }
