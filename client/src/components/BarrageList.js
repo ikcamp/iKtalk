@@ -1,14 +1,12 @@
 import React, { Component } from 'react'
-import MakeSocket from '../lib/MakeSocket'
 import ReactCSSTransitionGroup from 'react-addons-css-transition-group'
-
 export default class BarrageList extends Component {
     constructor(props) {
       super(props)
       this.state = {barrages: this.props.barrages}
     }
     componentWillReceiveProps(nextProps) {
-        this.setState({barrages: nextProps.barrages});
+        this.setState({barrages: nextProps.barrages})
     }
     render() {
       const barrages = this.state.barrages ? this.state.barrages.map((barrage, index) => (

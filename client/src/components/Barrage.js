@@ -3,7 +3,6 @@ import io from 'socket.io-client'
 import React, { Component } from 'react'
 import BarrageList from './BarrageList'
 import BarrageInput from './BarrageInput'
-
 export default class Barrage extends Component {
     constructor(props) {
       super(props)
@@ -17,11 +16,11 @@ export default class Barrage extends Component {
       this.state = {barrages: []}
     }
     addBarrage(item) {
-      const newBarrage = this.state.barrages.concat([item.message]);
-      this.setState({barrages: newBarrage});
+      const newBarrage = this.state.barrages.concat([item.message])
+      this.setState({barrages: newBarrage})
     }
     sendBarrage(barrage) {
-      this.socket && this.socket.emit('new message', barrage);
+      this.socket && this.socket.emit('new message', barrage)
     }
     render() {
       return (
