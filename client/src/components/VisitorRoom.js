@@ -163,8 +163,8 @@ export default class VisitorRoom extends Component {
           <div className="live-count"><span className="icon icon-user"/>{liveCount}</div>
           <div className={cx('control-bar', { moveout: !controlPanelVisible })}>
             <Link to="/" className="icon icon-close"/>
-            <a onClick={toggleFullScreen} className={cx('icon', 'icon-full-screen', { 'full-screen-exit': isFullScreen, 'full-screen-enter': !isFullScreen })}></a>
-            <a onClick={toggleMute} className={cx('icon', 'icon-vol', { 'vol-mute': isMuted, 'vol-normal': !isMuted })}></a>
+            <a onClick={toggleFullScreen} className={cx('icon', { 'icon-full-screen-exit': isFullScreen, 'icon-full-screen-enter': !isFullScreen })}></a>
+            <a onClick={toggleMute} className={cx('icon', { 'icon-vol-mute': isMuted, 'icon-vol-normal': !isMuted })}></a>
           </div>
         </div>
         <Toast duration={2000} ref="toast" />

@@ -48,33 +48,21 @@
   cursor: pointer;
 }
 .icon-close {
-  width: 24px;
-  height: 24px;
   background-image: url(../components/images/over.png);
 }
 .icon-camera {
-  width: '31px';
-  height: '26px';
   background-image: url(../components/images/camera.png);
 }
-.icon-full-screen {
-  width: 22px;
-  height: 22px;
-}
-.full-screen-enter {
+.icon-full-screen-enter {
   background-image: url(../components/images/full-screen.png);
 }
-.full-screen-exit {
+.icon-full-screen-exit {
   background-image: url(../components/images/full-screen-exit.png);
 }
-.icon-vol {
-  width: 24px;
-  height: 24px;
-}
-.vol-normal {
+.icon-vol-normal {
   background-image: url(../components/images/vol-normal.png);
 }
-.vol-mute {
+.icon-vol-mute {
   background-image: url(../components/images/vol-mute.png);
 }
 .live-count {

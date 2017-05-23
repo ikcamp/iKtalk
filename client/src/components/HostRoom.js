@@ -65,7 +65,7 @@ export default class HostRoom extends Component {
           <div className={cx('control-bar', { moveout: !controlPanelVisible })}>
             <Link to="/" className="icon icon-close"/>
             { cameras.length >= 2 && <a onClick={onToggleCamera} className="icon icon-camera"></a> }
-            <a onClick={onToggleMute} className={cx('icon', 'icon-vol', { 'vol-mute': isMuted, 'vol-normal': !isMuted })}></a>
+            <a onClick={onToggleMute} className={cx('icon', { 'icon-vol-mute': isMuted, 'icon-vol-normal': !isMuted })}></a>
           </div>
         </div>
         <Toast duration={2000} ref="toast" />

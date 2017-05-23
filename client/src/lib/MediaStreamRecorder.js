@@ -56,8 +56,7 @@ export default class MediaStreamRecorder {
   start(interval = 3000) {
     console.debug('start record')
     this.recordedBlobs = [];  // 数据记录初始化
-    var mimeTypes = ['video/webm;codecs=vp9', 'video/webm;codecs=vp8',
-      'video/webm']
+    var mimeTypes = ['video/webm', 'video/webm;codecs=vp9', 'video/webm;codecs=vp8']
     // 查找支持的视频格式
     var mimeType = mimeTypes.find(type=>MediaRecorder.isTypeSupported(type)) || ''
     try {
