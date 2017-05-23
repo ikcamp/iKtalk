@@ -160,13 +160,11 @@ export default class VisitorRoom extends Component {
       <div className="room" style={styles.room}>
         <video autoPlay className="video" ref="video"></video>
         <div className="float-layer" onClick={handleTouch}>
-          <div className="live-count">
-            <img src={require('./images/user@2x.png')}/>{liveCount}
-          </div>
+          <div className="live-count"><span className="icon icon-user"/>{liveCount}</div>
           <div className={cx('control-bar', { moveout: !controlPanelVisible })}>
-            <Link to="/" className="icon back-btn"/>
-            <a onClick={toggleFullScreen} className={cx('icon', 'full-screen', { 'full-screen-exit': isFullScreen, 'full-screen-enter': !isFullScreen })}></a>
-            <a onClick={toggleMute} className={cx('icon', 'vol', { 'vol-mute': isMuted, 'vol-normal': !isMuted })}></a>
+            <Link to="/" className="icon icon-close"/>
+            <a onClick={toggleFullScreen} className={cx('icon', 'icon-full-screen', { 'full-screen-exit': isFullScreen, 'full-screen-enter': !isFullScreen })}></a>
+            <a onClick={toggleMute} className={cx('icon', 'icon-vol', { 'vol-mute': isMuted, 'vol-normal': !isMuted })}></a>
           </div>
         </div>
         <Toast duration={2000} ref="toast" />

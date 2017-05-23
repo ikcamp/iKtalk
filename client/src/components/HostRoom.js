@@ -61,13 +61,11 @@ export default class HostRoom extends Component {
       <div className="room" style={styles.room}>
         <video src={stream} autoPlay className="video"></video>
         <div className="float-layer" onClick={handleTouch}>
-          <div className="live-count">
-            <img src={require('./images/user@2x.png')}/>{liveCount}
-          </div>
+          <div className="live-count"><span className="icon icon-user"/>{liveCount}</div>
           <div className={cx('control-bar', { moveout: !controlPanelVisible })}>
-            <Link to="/" className="icon back-btn"/>
-            { cameras.length >= 2 && <a onClick={onToggleCamera} className="icon camera"></a> }
-            <a onClick={onToggleMute} className={cx('icon', 'vol', { 'vol-mute': isMuted, 'vol-normal': !isMuted })}></a>
+            <Link to="/" className="icon icon-close"/>
+            { cameras.length >= 2 && <a onClick={onToggleCamera} className="icon icon-camera"></a> }
+            <a onClick={onToggleMute} className={cx('icon', 'icon-vol', { 'vol-mute': isMuted, 'vol-normal': !isMuted })}></a>
           </div>
         </div>
         <Toast duration={2000} ref="toast" />

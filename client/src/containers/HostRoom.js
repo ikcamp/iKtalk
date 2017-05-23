@@ -44,7 +44,7 @@ class HostRoomContainer extends Component {
 
   componentDidMount() {
     if (this.props.user) {
-      // this.begin(this.props.user.id)
+      this.begin(this.props.user.id)
     }
     this.initMedias()
   }

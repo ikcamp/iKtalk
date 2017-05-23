@@ -25,13 +25,15 @@
   position: absolute;
   top: 10px;
   right: 10px;
-  height: 100%;
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
+  background: rgba(0,0,0,.2);
+  padding: 20px 10px 0;
+  border-radius: 15px;
 }
 .control-bar.moveout {
-  right: -40px;
+  right: -50px;
 }
 .control-bar .icon {
   margin-bottom: 20px;
@@ -45,17 +47,17 @@
   background-position: center center;
   cursor: pointer;
 }
-.back-btn {
+.icon-close {
   width: 24px;
   height: 24px;
-  background-image: url(../components/images/over@2x.png);
+  background-image: url(../components/images/over.png);
 }
-.camera {
+.icon-camera {
   width: '31px';
   height: '26px';
-  background-image: url(../components/images/toggle-camera@2x.png);
+  background-image: url(../components/images/camera.png);
 }
-.full-screen {
+.icon-full-screen {
   width: 22px;
   height: 22px;
 }
@@ -65,7 +67,7 @@
 .full-screen-exit {
   background-image: url(../components/images/full-screen-exit.png);
 }
-.vol {
+.icon-vol {
   width: 24px;
   height: 24px;
 }
@@ -79,14 +81,19 @@
   width: 60px;
   border-radius: 15px;
   display: inline-block;
-  background: rgba(0,0,0,.3);
+  background: rgba(0,0,0,.2);
   color: #fff;
   vertical-align: middle;
   line-height: 30px;
   height: 30px;
+  font-size: 14px;
 }
-.live-count img {
-  width: 20px;
-  margin: 0 10px 0 7px;
+.live-count .icon-user {
+  margin: 0 10px;
   vertical-align: -3px;
+}
+.icon-user {
+  width: 16px;
+  height: 16px;
+  background-image: url(../components/images/user.png);
 }
