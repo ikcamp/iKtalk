@@ -4,77 +4,13 @@ import Toast from './Toast'
 import Barrage from './Barrage'
 const CLIENT_WIDTH = document.documentElement.clientWidth
 const CLIENT_HEIGHT = document.documentElement.clientHeight
+import '../style/room.css'
+import cx from 'classnames'
 
 const styles = {
   room: {
     width: `${CLIENT_WIDTH}px`,
     height: `${CLIENT_HEIGHT}px`
-  },
-  video: {
-    objectFit: 'cover',
-    width: '100%',
-    height: '100%'
-  },
-  controlPanel: {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
-    color: '#fff',
-    transition: 'visibility .5s'
-  },
-  backBtn: {
-    display: 'inline-block',
-    width: '24px',
-    height: '24px',
-    backgroundSize: '100% auto',
-    backgroundRepeat: 'no-repeat',
-    backgroundPosition: 'center center',
-    backgroundImage: `url(${require('./images/over@2x.png')})`,
-    position: 'absolute',
-    top: '15px',
-    left: '15px',
-    cursor: 'pointer'
-  },
-  toggleCameraBtn: {
-    display: 'inline-block',
-    width: '31px',
-    height: '26px',
-    backgroundSize: '100% auto',
-    backgroundRepeat: 'no-repeat',
-    backgroundPosition: 'center center',
-    backgroundImage: `url(${require('./images/toggle-camera@2x.png')})`,
-    position: 'absolute',
-    top: '15px',
-    right: '15px',
-    cursor: 'pointer'
-  },
-  volNormal: {
-    display: 'inline-block',
-    width: '24px',
-    height: '24px',
-    backgroundSize: '100% auto',
-    backgroundRepeat: 'no-repeat',
-    backgroundPosition: 'center center',
-    backgroundImage: `url(${require('./images/vol-normal.png')})`,
-    position: 'absolute',
-    top: '50px',
-    right: '15px',
-    cursor: 'pointer'
-  },
-  volMute: {
-    display: 'inline-block',
-    width: '24px',
-    height: '24px',
-    backgroundSize: '100% auto',
-    backgroundRepeat: 'no-repeat',
-    backgroundPosition: 'center center',
-    backgroundImage: `url(${require('./images/vol-mute.png')})`,
-    position: 'absolute',
-    top: '50px',
-    right: '15px',
-    cursor: 'pointer'
   }
 }
 
@@ -117,14 +53,20 @@ export default class HostRoom extends Component {
   render() {
     const { handleTouch } = this
     const { controlPanelVisible } = this.state
-    const { user, stream, cameras = [], isMuted, onExitRoom, onToggleMute, onToggleCamera } = this.props
+    const {
+      user, stream, cameras = [], liveCount = 0,
+      isMuted, onExitRoom, onToggleMute, onToggleCamera
+    } = this.props
     return (
-      <div style={styles.room} onClick={handleTouch}>
-        <video src={stream} autoPlay style={styles.video}></video>
-        <div style={{ ...styles.controlPanel, visibility: controlPanelVisible ? 'visible' : 'hidden' }}>
-          <Link to="/" style={styles.backBtn}/>
-          { cameras.length >= 2 && <a onClick={onToggleCamera} style={styles.toggleCameraBtn}></a> }
-          <a onClick={onToggleMute} style={isMuted ? styles.volMute : styles.volNormal}></a>
+      <div className="room" style={styles.room}>
+        <video src={stream} autoPlay className="video"></video>
+        <div className="float-layer" onClick={handleTouch}>
+          <div className="live-count"><span className="icon icon-user"/>{liveCount}</div>
+          <div className={cx('control-bar', { moveout: !controlPanelVisible })}>
+            <Link to="/" className="icon icon-close"/>
+            { cameras.length >= 2 && <a onClick={onToggleCamera} className="icon icon-camera"></a> }
+            <a onClick={onToggleMute} className={cx('icon', { 'icon-vol-mute': isMuted, 'icon-vol-normal': !isMuted })}></a>
+          </div>
         </div>
         <Toast duration={2000} ref="toast" />
         <Barrage channel={this.props.user}/>

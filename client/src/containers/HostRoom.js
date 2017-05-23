@@ -3,7 +3,7 @@ import { connect } from 'react-redux'
 import HostRoom from '../components/HostRoom'
 import MediaStreamRecorder from 'msr'
 // import MediaStreamRecorder from '../lib/MediaStreamRecorder'
-import MediaStreamTransfer from '../lib/MediaStreamTransfer'
+import LiveSocket from '../lib/LiveSocket'
 import fetch from '../fetch'
 import config from '../config'
 
@@ -11,22 +11,22 @@ const { httpServer, httpsServer, httpsHost, httpsPort } = config
 const CLIENT_WIDTH = document.documentElement.clientWidth
 const CLIENT_HEIGHT = document.documentElement.clientHeight
 
-class HostRoomContainer extends Component {
+export const LIVE_STATUS = {
+  IDLE: 0, // 空闲中
+  BEGIN: 1, // 开始直播
+  SOCKET_CONNECTED: 2, // socket已连接
+  LIVING: 3, // 直播中
+  END: 4 // 直播结束
+}
 
-  static LIVE_STATUS = {
-    IDLE: 0, // 空闲中
-    BEGIN: 1, // 开始直播
-    SOCKET_CONNECTED: 2, // socket已连接
-    LIVING: 3, // 直播中
-    END: 4 // 直播结束
-  }
+class HostRoomContainer extends Component {
 
   constructor(props) {
     super(props)
     this.state = {
-      status: HostRoomContainer.LIVE_STATUS.IDLE,
+      status: LIVE_STATUS.IDLE,
       mediaConstraints: {
-        audio: true,
+        audio: false,
         video: {
           width: CLIENT_WIDTH,
           height: CLIENT_HEIGHT,
@@ -171,12 +171,11 @@ class HostRoomContainer extends Component {
           height: CLIENT_HEIGHT
         }
         mediaRecorder.ondataavailable = (blob) => {
-        // mediaRecorder.onDataAvailable = (blob) => {
-          if (this.state.status === HostRoomContainer.LIVE_STATUS.SOCKET_CONNECTED) {
-            this.setState({ status: HostRoomContainer.LIVE_STATUS.LIVING })
+          if (this.state.status === LIVE_STATUS.SOCKET_CONNECTED) {
+            this.setState({ status: LIVE_STATUS.LIVING })
           }
-          if (this.state.status === HostRoomContainer.LIVE_STATUS.SOCKET_CONNECTED || this.state.status === HostRoomContainer.LIVE_STATUS.LIVING) {
-            if (this.mediaStreamTransfer && this.mediaStreamTransfer.isConnected) this.mediaStreamTransfer.upload(blob)
+          if (this.state.status === LIVE_STATUS.SOCKET_CONNECTED || this.state.status === LIVE_STATUS.LIVING) {
+            if (this.liveSocket && this.liveSocket.isConnected) this.liveSocket.upload(blob)
           }
         }
         mediaRecorder.start(3000)
@@ -197,15 +196,15 @@ class HostRoomContainer extends Component {
    * @memberof HostRoomContainer
    */
   begin(id) {
-    if (this.state.status !== HostRoomContainer.LIVE_STATUS.IDLE) return
+    if (this.state.status !== LIVE_STATUS.IDLE) return
     this.getChannel(id).then(()=>{
       fetch(`/channel/${id}/begin`)
       .then(res=>res.json())
       .then(({ status }) => {
         if (status === 0) {
           this.setState({
-            status: HostRoomContainer.LIVE_STATUS.BEGIN
-          }, ()=>this.connectServer(id))
+            status: LIVE_STATUS.BEGIN
+          }, ()=>this.connectSocketServer(id))
         } else {
           window.alert('开始直播异常')
         }
@@ -252,10 +251,16 @@ class HostRoomContainer extends Component {
    *
    * @memberof HostRoomContainer
    */
-  connectServer(id) {
-    let mediaStreamTransfer = this.mediaStreamTransfer = new MediaStreamTransfer({ server: httpServer })
-    mediaStreamTransfer.connect(id)
-    this.setState({ status: HostRoomContainer.LIVE_STATUS.SOCKET_CONNECTED })
+  connectSocketServer(id) {
+    let liveSocket = this.liveSocket = new LiveSocket({ server: httpServer })
+    liveSocket.connect(id).then(()=>{
+      this.setState({ status: LIVE_STATUS.SOCKET_CONNECTED })
+      liveSocket.on('online', (count)=>{
+        this.setState({
+          liveCount: count
+        })
+      })
+    })
   }
 
   /**
@@ -269,8 +274,8 @@ class HostRoomContainer extends Component {
       this.mediaRecorder.ondataavailable = ()=>{}
       this.mediaRecorder.stop()
     }
-    if (this.mediaStreamTransfer) {
-      this.mediaStreamTransfer.disconnect()
+    if (this.liveSocket) {
+      this.liveSocket.disconnect()
     }
     const { user, history } = this.props
     fetch(`/channel/${user.id}/end`)
