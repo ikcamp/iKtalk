@@ -1,5 +1,4 @@
 import React, { Component } from 'react'
-import MakeSocket from '../lib/MakeSocket'
 import ReactCSSTransitionGroup from 'react-addons-css-transition-group'
 
 export default class BarrageList extends Component {

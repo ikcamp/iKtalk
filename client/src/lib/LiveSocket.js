@@ -1,7 +1,7 @@
 import io from 'socket.io-client'
 import ss from 'socket.io-stream'
 
-export default class MediaStreamTransfer {
+export default class LiveSocket {
 
   constructor({ server, host, port }) {
     this.server = server
@@ -24,12 +24,17 @@ export default class MediaStreamTransfer {
         clearTimeout(connectTimer)
         resolve()
       })
+      socket.on('error', reject)
     })
   }
 
   disconnect() {
     this.socket.emit('disconnect')
     this.socket.disconnect()
+  }
+
+  on(message, callback = ()=>{}) {
+    this.socket.on(message, callback)
   }
 
   send(message) {

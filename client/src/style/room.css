@@ -1,0 +1,92 @@
+.room {
+}
+.room-error {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column
+}
+.video {
+  object-fit: cover;
+  width: 100%;
+  height: 100%;
+}
+.float-layer {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 30px;
+  z-index: 100;
+  padding: 10px;
+}
+.control-bar {
+  transition: right .5s;
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+}
+.control-bar.moveout {
+  right: -40px;
+}
+.control-bar .icon {
+  margin-bottom: 20px;
+}
+.icon {
+  display: inline-block;
+  width: 24px;
+  height: 24px;
+  background-size: 100% auto;
+  background-repeat: no-repeat;
+  background-position: center center;
+  cursor: pointer;
+}
+.back-btn {
+  width: 24px;
+  height: 24px;
+  background-image: url(../components/images/over@2x.png);
+}
+.camera {
+  width: '31px';
+  height: '26px';
+  background-image: url(../components/images/toggle-camera@2x.png);
+}
+.full-screen {
+  width: 22px;
+  height: 22px;
+}
+.full-screen-enter {
+  background-image: url(../components/images/full-screen.png);
+}
+.full-screen-exit {
+  background-image: url(../components/images/full-screen-exit.png);
+}
+.vol {
+  width: 24px;
+  height: 24px;
+}
+.vol-normal {
+  background-image: url(../components/images/vol-normal.png);
+}
+.vol-mute {
+  background-image: url(../components/images/vol-mute.png);
+}
+.live-count {
+  width: 60px;
+  border-radius: 15px;
+  display: inline-block;
+  background: rgba(0,0,0,.3);
+  color: #fff;
+  vertical-align: middle;
+  line-height: 30px;
+  height: 30px;
+}
+.live-count img {
+  width: 20px;
+  margin: 0 10px 0 7px;
+  vertical-align: -3px;
+}

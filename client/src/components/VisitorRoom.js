@@ -5,6 +5,8 @@ import Toast from './Toast'
 import Hls from 'hls.js'
 import Barrage from './Barrage'
 import { VISITOR_ROOM_ERROR_STATUS, VISITOR_ROOM_ERROR_MESSAGE } from '../consts'
+import '../style/room.css'
+import cx from 'classnames'
 
 const CLIENT_WIDTH = document.documentElement.clientWidth
 const CLIENT_HEIGHT = document.documentElement.clientHeight
@@ -17,90 +19,7 @@ const styles = {
   },
   roomError: {
     width: `${CLIENT_WIDTH}px`,
-    height: `${CLIENT_HEIGHT}px`,
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-    flexDirection: 'column'
-  },
-  video: {
-    objectFit: 'cover',
-    width: '100%',
-    height: '100%'
-  },
-  controlPanel: {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
-    color: '#fff',
-    transition: 'visibility .5s'
-  },
-  backBtn: {
-    display: 'inline-block',
-    width: '24px',
-    height: '24px',
-    backgroundSize: '100% auto',
-    backgroundRepeat: 'no-repeat',
-    backgroundPosition: 'center center',
-    backgroundImage: `url(${require('./images/over@2x.png')})`,
-    position: 'absolute',
-    top: '15px',
-    left: '15px',
-    cursor: 'pointer'
-  },
-  fullScreen: {
-    display: 'inline-block',
-    width: '22px',
-    height: '22px',
-    backgroundSize: '100% auto',
-    backgroundRepeat: 'no-repeat',
-    backgroundPosition: 'center center',
-    backgroundImage: `url(${require('./images/full-screen.png')})`,
-    position: 'absolute',
-    top: '15px',
-    right: '15px',
-    cursor: 'pointer'
-  },
-  fullScreenExit: {
-    display: 'inline-block',
-    width: '22px',
-    height: '22px',
-    backgroundSize: '100% auto',
-    backgroundRepeat: 'no-repeat',
-    backgroundPosition: 'center center',
-    backgroundImage: `url(${require('./images/full-screen-exit.png')})`,
-    position: 'absolute',
-    top: '15px',
-    right: '15px',
-    cursor: 'pointer'
-  },
-  volNormal: {
-    display: 'inline-block',
-    width: '24px',
-    height: '24px',
-    backgroundSize: '100% auto',
-    backgroundRepeat: 'no-repeat',
-    backgroundPosition: 'center center',
-    backgroundImage: `url(${require('./images/vol-normal.png')})`,
-    position: 'absolute',
-    top: '50px',
-    right: '15px',
-    cursor: 'pointer'
-  },
-  volMute: {
-    display: 'inline-block',
-    width: '24px',
-    height: '24px',
-    backgroundSize: '100% auto',
-    backgroundRepeat: 'no-repeat',
-    backgroundPosition: 'center center',
-    backgroundImage: `url(${require('./images/vol-mute.png')})`,
-    position: 'absolute',
-    top: '50px',
-    right: '15px',
-    cursor: 'pointer'
+    height: `${CLIENT_HEIGHT}px`
   }
 }
 
@@ -133,7 +52,7 @@ export default class VisitorRoom extends Component {
   componentDidMount() {
     const { playUrl } = this.props
     this.hideTimer = setTimeout(()=>{
-      this.setState({ controlPanelVisible: true })
+      this.setState({ controlPanelVisible: false })
     }, 3000)
     let video = this.video = ReactDOM.findDOMNode(this.refs.video)
     playUrl && this.loadSource(playUrl)
@@ -194,7 +113,7 @@ export default class VisitorRoom extends Component {
       controlPanelVisible: true
     }, ()=>{
       this.hideTimer = setTimeout(()=>{
-        this.setState({ controlPanelVisible: true })
+        this.setState({ controlPanelVisible: false })
       }, 3000)
     })
 
@@ -231,19 +150,24 @@ export default class VisitorRoom extends Component {
     const { showToast, handleTouch, toggleFullScreen, toggleMute } = this
     const { controlPanelVisible, isFullScreen, isMuted } = this.state
     const {
-      user, stream, roomStatus, roomError,
+      user, stream, liveCount = 0, roomStatus, roomError,
       isMute = false,
     } = this.props
 
     if (roomError) return <RoomError {...roomError}/>
 
     return (
-      <div style={styles.room} onClick={handleTouch}>
-        <video autoPlay style={styles.video} ref="video"></video>
-        <div style={{ ...styles.controlPanel, visibility: controlPanelVisible ? 'visible' : 'hidden' }}>
-          <Link to="/" style={styles.backBtn}/>
-          <a onClick={toggleFullScreen} style={isFullScreen ? styles.fullScreenExit : styles.fullScreen}></a>
-          <a onClick={toggleMute} style={isMuted ? styles.volMute : styles.volNormal}></a>
+      <div className="room" style={styles.room}>
+        <video autoPlay className="video" ref="video"></video>
+        <div className="float-layer" onClick={handleTouch}>
+          <div className="live-count">
+            <img src={require('./images/user@2x.png')}/>{liveCount}
+          </div>
+          <div className={cx('control-bar', { moveout: !controlPanelVisible })}>
+            <Link to="/" className="icon back-btn"/>
+            <a onClick={toggleFullScreen} className={cx('icon', 'full-screen', { 'full-screen-exit': isFullScreen, 'full-screen-enter': !isFullScreen })}></a>
+            <a onClick={toggleMute} className={cx('icon', 'vol', { 'vol-mute': isMuted, 'vol-normal': !isMuted })}></a>
+          </div>
         </div>
         <Toast duration={2000} ref="toast" />
         <Barrage channel={this.props.match.params}/>
