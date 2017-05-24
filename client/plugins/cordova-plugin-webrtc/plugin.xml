@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<plugin xmlns="http://www.phonegap.com/ns/plugins/1.0"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    id="cordova-plugin-webrtc"
+    version="0.1.1">
+
+    <name>WebRTC</name>
+    <description></description>
+    <license></license>
+
+    <engines>
+        <engine name="cordova" version=">=3.0.0" />
+    </engines>
+
+    <js-module src="dist/webrtc.js" name="WebRTC">
+        <clobbers target="webrtc" />
+    </js-module>
+
+    <platform name="ios">
+        <config-file target="config.xml" parent="/*">
+            <feature name="WebRTCPlugin">
+                <param name="ios-package" value="WebRTCPlugin" />
+            </feature>
+        </config-file>
+        <source-file src="src/ios/WebRTCPlugin.m" />
+        <header-file src="src/ios/WebRTCPlugin.h" />
+
+        <hook type="before_plugin_install" src="scripts/pull_webrtc_library.js" />
+
+		<source-file src="libs/ios/libwebrtc.a" framework="true" />
+        <header-file src="libs/ios/Headers/RTCAudioSource.h" target-dir="libs/header" />
+        <header-file src="libs/ios/Headers/RTCAudioTrack.h" target-dir="libs/header" />
+        <header-file src="libs/ios/Headers/RTCDataChannel.h" target-dir="libs/header" />
+        <header-file src="libs/ios/Headers/RTCEAGLVideoView.h" target-dir="libs/header" />
+        <header-file src="libs/ios/Headers/RTCI420Frame.h" target-dir="libs/header" />
+        <header-file src="libs/ios/Headers/RTCICECandidate.h" target-dir="libs/header" />
+        <header-file src="libs/ios/Headers/RTCICEServer.h" target-dir="libs/header" />
+        <header-file src="libs/ios/Headers/RTCMediaConstraints.h" target-dir="libs/header" />
+        <header-file src="libs/ios/Headers/RTCMediaSource.h" target-dir="libs/header" />
+        <header-file src="libs/ios/Headers/RTCMediaStream.h" target-dir="libs/header" />
+        <header-file src="libs/ios/Headers/RTCMediaStreamTrack.h" target-dir="libs/header" />
+        <header-file src="libs/ios/Headers/RTCNSGLVideoView.h" target-dir="libs/header" />
+        <header-file src="libs/ios/Headers/RTCOpenGLVideoRenderer.h" target-dir="libs/header" />
+        <header-file src="libs/ios/Headers/RTCPair.h" target-dir="libs/header" />
+        <header-file src="libs/ios/Headers/RTCPeerConnection.h" target-dir="libs/header" />
+        <header-file src="libs/ios/Headers/RTCPeerConnectionDelegate.h" target-dir="libs/header" />
+        <header-file src="libs/ios/Headers/RTCPeerConnectionFactory.h" target-dir="libs/header" />
+        <header-file src="libs/ios/Headers/RTCSessionDescription.h" target-dir="libs/header" />
+        <header-file src="libs/ios/Headers/RTCSessionDescriptionDelegate.h" target-dir="libs/header" />
+        <header-file src="libs/ios/Headers/RTCStatsDelegate.h" target-dir="libs/header" />
+        <header-file src="libs/ios/Headers/RTCStatsReport.h" target-dir="libs/header" />
+        <header-file src="libs/ios/Headers/RTCTypes.h" target-dir="libs/header" />
+        <header-file src="libs/ios/Headers/RTCVideoCapturer.h" target-dir="libs/header" />
+        <header-file src="libs/ios/Headers/RTCVideoRenderer.h" target-dir="libs/header" />
+        <header-file src="libs/ios/Headers/RTCVideoSource.h" target-dir="libs/header" />
+        <header-file src="libs/ios/Headers/RTCVideoTrack.h" target-dir="libs/header" />
+
+        <framework src="libc++.dylib" />
+        <framework src="libsqlite3.0.dylib" />
+        <framework src="OpenGLES.framework" />
+        <framework src="CoreVideo.framework" />
+        <framework src="CoreMedia.framework" />
+        <framework src="CoreAudio.framework" />
+        <framework src="AVFoundation.framework" />
+        <framework src="QuartzCore.framework" />
+        <framework src="AssetsLibrary.framework" />
+        <framework src="CoreGraphics.framework" />
+        <framework src="MobileCoreServices.framework" />
+        <framework src="CoreLocation.framework" />
+        <framework src="AudioToolbox.framework" />
+        <framework src="GLKit.framework" />
+    </platform>
+</plugin>

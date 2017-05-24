@@ -1,0 +1,12 @@
+{
+    "name": "com.remotium.webrtc",
+    "version": "0.1.0",
+    "authors": [
+        "Jose Pereira <jose@remotium.com>"
+    ],
+    "description": "Cordova WebRTC plugin",
+    "license": "Apache",
+    "dependencies": {
+        "MutationObservers": "polymer/MutationObservers#~0.4.0"
+    }
+}

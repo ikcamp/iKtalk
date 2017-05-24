@@ -1,0 +1,91 @@
+{
+  "_args": [
+    [
+      {
+        "raw": "cordova-plugin-webrtc",
+        "scope": null,
+        "escapedName": "cordova-plugin-webrtc",
+        "name": "cordova-plugin-webrtc",
+        "rawSpec": "",
+        "spec": "latest",
+        "type": "tag"
+      },
+      "/Users/smithjohn/Develop/book-source/iKtalk/client/node_modules"
+    ]
+  ],
+  "_from": "cordova-plugin-webrtc@latest",
+  "_id": "cordova-plugin-webrtc@0.1.1",
+  "_inCache": true,
+  "_location": "/cordova-plugin-webrtc",
+  "_nodeVersion": "0.12.0",
+  "_npmUser": {
+    "name": "onaips",
+    "email": "onaips@gmail.com"
+  },
+  "_npmVersion": "2.5.1",
+  "_phantomChildren": {},
+  "_requested": {
+    "raw": "cordova-plugin-webrtc",
+    "scope": null,
+    "escapedName": "cordova-plugin-webrtc",
+    "name": "cordova-plugin-webrtc",
+    "rawSpec": "",
+    "spec": "latest",
+    "type": "tag"
+  },
+  "_requiredBy": [
+    "#USER",
+    "/"
+  ],
+  "_resolved": "https://registry.npmjs.org/cordova-plugin-webrtc/-/cordova-plugin-webrtc-0.1.1.tgz",
+  "_shasum": "786325c5e2a937319c9c8488215e2c7ed8936285",
+  "_shrinkwrap": null,
+  "_spec": "cordova-plugin-webrtc",
+  "_where": "/Users/smithjohn/Develop/book-source/iKtalk/client/node_modules",
+  "author": {
+    "name": "Remotium Inc."
+  },
+  "cordova": {
+    "id": "cordova-plugin-webrtc",
+    "platforms": [
+      "ios"
+    ]
+  },
+  "dependencies": {},
+  "description": "Cordova WebRTC Plugin",
+  "devDependencies": {
+    "bower": "^1.3.7",
+    "gulp": "^3.8.8",
+    "gulp-load-plugins": "^0.6.0",
+    "gulp-webpack": "^0.3.0",
+    "jshint-stylish": "^0.4.0",
+    "mkdirp": "^0.5.1",
+    "webpack": "^1.4.0-beta6",
+    "webpack-dev-server": "^1.6.4"
+  },
+  "directories": {},
+  "dist": {
+    "shasum": "786325c5e2a937319c9c8488215e2c7ed8936285",
+    "tarball": "https://registry.npmjs.org/cordova-plugin-webrtc/-/cordova-plugin-webrtc-0.1.1.tgz"
+  },
+  "gitHead": "38152218ce5eaaf1988281690a1fa92799992054",
+  "keywords": [
+    "cordova",
+    "webrtc",
+    "ecosystem:cordova",
+    "cordova-ios"
+  ],
+  "license": "Apache",
+  "main": "gulpfile.js",
+  "maintainers": [
+    {
+      "name": "onaips",
+      "email": "onaips@gmail.com"
+    }
+  ],
+  "name": "cordova-plugin-webrtc",
+  "optionalDependencies": {},
+  "readme": "ERROR: No README data found!",
+  "scripts": {},
+  "version": "0.1.1"
+}
