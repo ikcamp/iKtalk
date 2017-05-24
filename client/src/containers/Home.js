@@ -33,14 +33,14 @@ class Home extends Component {
                     channelList.length > 0 ?
                         <ul className="living-list">
                             {
-                                channelList.map(({ id, name})=>(
+                                channelList.map(({ id, name, onlines, createTime}, index)=>(
                                     <li key={id}>
                                         <Link className="living-link" to={`/room/${id}`}>
                                             <div className="living-img"></div>
                                             <div className="living-info">
-                                                <div className="living-name">{name}</div>
-                                                <div className="living-time">2017-01-01 00:00:00</div>
-                                                <div className="people-num">在线人数:128人</div>
+                                                <div className="living-name">{'我的直播' + (index+1)}</div>
+                                                <div className="living-time">{new Date(createTime).Format("yyyy-MM-dd HH:mm:ss")}</div>
+                                                <div className="people-num">在线人数:{onlines}人</div>
                                             </div>
                                         </Link>
                                     </li>
