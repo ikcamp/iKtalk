@@ -9,16 +9,27 @@ export default class Barrage extends Component {
       if(this.props.channel){
         let cid = this.props.channel.id
         this.socket = io(`${config.httpServer}/${cid}`)
+        //当监听到弹幕信息后调用addBarrage方法
         this.socket.on('new message', (data)=>{
           this.addBarrage(data);
         });
       }
       this.state = {barrages: []}
     }
-    addBarrage(item) {
-      const newBarrage = this.state.barrages.concat([item.message])
+    /**
+     * 改变弹幕state
+     * @param {Object} barrage 弹幕对象
+     * @return
+     */
+    addBarrage(barrage) {
+      const newBarrage = this.state.barrages.concat([barrage.message])
       this.setState({barrages: newBarrage})
     }
+    /**
+    * 发送弹幕信息
+    * @param {Object} barrage 弹幕对象
+    * @return
+    */
     sendBarrage(barrage) {
       this.socket && this.socket.emit('new message', barrage)
     }
